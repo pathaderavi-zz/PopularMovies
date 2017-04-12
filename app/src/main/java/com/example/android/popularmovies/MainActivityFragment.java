@@ -3,6 +3,8 @@ package com.example.android.popularmovies;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +20,11 @@ import java.util.Arrays;
  */
 public class MainActivityFragment extends Fragment {
 
+    private RecyclerView mMovieRecyclerView;
+
     private MovieAdapter mAdapter;
+
+    private RecyclerView.LayoutManager layoutM;
 
     Movie[] allMovies = {
             new Movie(1,"Interstellar"),
@@ -76,6 +82,10 @@ public class MainActivityFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
+
     }
 
     @Override
@@ -84,10 +94,17 @@ public class MainActivityFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main_activity,container,false);
 
-        mAdapter = new MovieAdapter(getActivity(), Arrays.asList(allMovies));
+        mMovieRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerview_movie);
+
+        layoutM = new GridLayoutManager(getActivity(),2);
+
+        mAdapter = new MovieAdapter(allMovies);
+
+        mMovieRecyclerView.setLayoutManager(layoutM);
 
         GridView gView = (GridView) rootView.findViewById(R.id.fragment_movie);
-        gView.setAdapter(mAdapter);
+        mMovieRecyclerView.setHasFixedSize(true);
+        mMovieRecyclerView.setAdapter(mAdapter);
 
         // Inflate the layout for this fragment
         return rootView;
