@@ -1,14 +1,25 @@
 package com.example.android.popularmovies;
 
 
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import java.util.Arrays;
+import com.example.android.popularmovies.data.QueryUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -16,21 +27,22 @@ import java.util.Arrays;
  * Use the {@link MainActivityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainActivityFragment extends Fragment {
+public class MainActivityFragment extends Fragment  {
 
     private MovieAdapter mAdapter;
+    private GridView gView;
 
-    Movie[] allMovies = {
-            new Movie(1,"Interstellar"),
-            new Movie(2,"Star wars"),
-            new Movie(3,"The Prestige"),
-            new Movie(4,"Scene"),
-            new Movie(5,"Captain America"),
-            new Movie(6,"Batman"),
-            new Movie(7,"Sultan"),
-            new Movie(8,"Superman")
-
-    };
+//    Movie[] allMovies = {
+//            new Movie(1,"Interstellar"),
+//            new Movie(2,"Star wars"),
+//            new Movie(3,"The Prestige"),
+//            new Movie(4,"Scene"),
+//            new Movie(5,"Captain America"),
+//            new Movie(6,"Batman"),
+//            new Movie(7,"Sultan"),
+//            new Movie(8,"Superman")
+//
+//    };
 
 
 
@@ -72,25 +84,60 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
 
+        new FetchMovies().execute();
+    }
+    View rootView;
+    public String location = "";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main_activity,container,false);
+        rootView = inflater.inflate(R.layout.fragment_main_activity,container,false);
+        gView = (GridView) rootView.findViewById(R.id.fragment_movie);
 
-        mAdapter = new MovieAdapter(getActivity(), Arrays.asList(allMovies));
-
-        GridView gView = (GridView) rootView.findViewById(R.id.fragment_movie);
-        gView.setAdapter(mAdapter);
 
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+
+
+
+    public class FetchMovies extends AsyncTask<Void, Void, List<Movie>>{
+
+
+        @Override
+        protected List doInBackground(Void... params) {
+            List<Movie> newList = new ArrayList<>();
+
+            try{
+                newList = QueryUtils.fetchMovies();
+                return newList;
+
+            }
+            catch(Exception e){e.printStackTrace();}
+
+            return newList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Movie> movies) {
+            super.onPostExecute(movies);
+
+            if(movies!=null){
+                //movies = new ArrayList<Movie>();
+                mAdapter = new MovieAdapter(getContext(), movies);
+
+
+                gView.setAdapter(mAdapter);
+            }
+        }
     }
 
 }

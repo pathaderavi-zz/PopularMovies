@@ -5,6 +5,12 @@ package com.example.android.popularmovies;
  */
 
 public class Movie {
+    public String getMovieName() {
+        return movieName;
+    }
+
+
+
     String movieName;
     int id;
 
