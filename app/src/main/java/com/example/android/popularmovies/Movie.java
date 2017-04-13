@@ -12,14 +12,14 @@ public class Movie {
 
 
     String movieName;
-    int id;
+    String id;
 
 
 
 
 
 
-   public Movie(int i, String name){
+   public Movie(String i, String name){
        this.movieName = name;
        this.id = i;
    }

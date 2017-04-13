@@ -25,7 +25,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 public class QueryUtils {
 
-    private final static String API_KEY = "c9a7eeb9aa2533f06119e9eb9bfeb800";
+        private final static String API_KEY = "c9a7eeb9aa2533f06119e9eb9bfeb800";
 
     private final static String stringURL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&primary_release_date.gte=2017-01-01&primary_release_date.lte=2017-03-03&api_key="+API_KEY;
 
@@ -143,11 +143,14 @@ public class QueryUtils {
 
                 JSONObject current = baseArray.getJSONObject(i);
 
-                String movieName = current.getString("title");
+                String mName = current.getString("poster_path");
+                String title = current.getString("title");
 
+                String movieName = "http://image.tmdb.org/t/p/w185"+mName;
 
+                Movie m = new Movie(movieName,title);
 
-                Movie m = new Movie(i,movieName);
+                //Log.i("Image URL :",movieName);
 
                 movies.add(m);
             }

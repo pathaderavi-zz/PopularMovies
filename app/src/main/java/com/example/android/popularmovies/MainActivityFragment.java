@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ImageView;
 
 import com.example.android.popularmovies.data.QueryUtils;
 
@@ -31,6 +32,7 @@ public class MainActivityFragment extends Fragment  {
 
     private MovieAdapter mAdapter;
     private GridView gView;
+    private ImageView imgView;
 
 //    Movie[] allMovies = {
 //            new Movie(1,"Interstellar"),
@@ -94,12 +96,14 @@ public class MainActivityFragment extends Fragment  {
     }
     View rootView;
     public String location = "";
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_main_activity,container,false);
         gView = (GridView) rootView.findViewById(R.id.fragment_movie);
+        //imgView = (ImageView) rootView.findViewById(R.id.image_poster);
 
 
         // Inflate the layout for this fragment
@@ -134,8 +138,8 @@ public class MainActivityFragment extends Fragment  {
                 //movies = new ArrayList<Movie>();
                 mAdapter = new MovieAdapter(getContext(), movies);
 
-
                 gView.setAdapter(mAdapter);
+
             }
         }
     }
