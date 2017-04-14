@@ -13,15 +13,17 @@ public class Movie {
 
     String movieName;
     String id;
+    String uniqueID;
 
 
 
 
 
 
-   public Movie(String i, String name){
+   public Movie(String i, String name, String uid){
        this.movieName = name;
        this.id = i;
+       this.uniqueID = uid;
    }
 
 

@@ -3,6 +3,7 @@ package com.example.android.popularmovies;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -14,13 +15,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.data.QueryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 
 /**
@@ -129,9 +134,9 @@ public class MainActivityFragment extends Fragment  {
 
             return newList;
         }
-
+        Toast toast = null;
         @Override
-        protected void onPostExecute(List<Movie> movies) {
+        protected void onPostExecute(final List<Movie> movies) {
             super.onPostExecute(movies);
 
             if(movies!=null){
@@ -139,6 +144,30 @@ public class MainActivityFragment extends Fragment  {
                 mAdapter = new MovieAdapter(getContext(), movies);
 
                 gView.setAdapter(mAdapter);
+
+                gView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Movie m = mAdapter.getItem(position);
+//
+//                        if(toast!=null){
+//                            toast.cancel();
+//                        }
+//
+//                        toast = Toast.makeText(getContext(),m.movieName,Toast.LENGTH_SHORT);
+//
+//                        toast.show();
+
+                        Intent detail = new Intent(getContext(),MovieDetailActivity.class);
+                        detail.setType("text/plain");
+                        detail.putExtra(Intent.EXTRA_TEXT,m.uniqueID);
+                        startActivity(detail);
+
+
+
+                    }
+                });
 
             }
         }

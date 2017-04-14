@@ -148,7 +148,9 @@ public class QueryUtils {
 
                 String movieName = "http://image.tmdb.org/t/p/w185"+mName;
 
-                Movie m = new Movie(movieName,title);
+                String id = current.getString("id");
+
+                Movie m = new Movie(movieName,title,id);
 
                 //Log.i("Image URL :",movieName);
 
@@ -161,6 +163,5 @@ public class QueryUtils {
 
         return movies;
     }
-
 
 }
