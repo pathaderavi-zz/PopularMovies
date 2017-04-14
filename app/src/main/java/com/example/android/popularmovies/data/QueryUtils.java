@@ -206,7 +206,7 @@ public class QueryUtils {
     public static SingleMovie fetchSingle(String id){
        // movieID = id;
         String movieDetailURL1 = "https://api.themoviedb.org/3/movie/"+id+"?api_key="+API_KEY;
-        Log.d(movieID+"ID of the Movie",movieDetailURL1);
+        //Log.d(movieID+"ID of the Movie",movieDetailURL1);
         URL url = createURLforMovie(movieDetailURL1);
 
         String jsonR = "";
@@ -220,7 +220,7 @@ public class QueryUtils {
 
         SingleMovie m = extractJSONforMovie(jsonR);
 
-        Log.d("Movie Title",jsonR);
+       // Log.d("Movie Title",jsonR);
         return m;
     }
 
@@ -236,7 +236,7 @@ public class QueryUtils {
         }catch(Exception e){
             e.printStackTrace();
         }
-        Log.d("URL would be: ", ur.toString());
+       // Log.d("URL would be: ", ur.toString());
         return ur;
     }
 

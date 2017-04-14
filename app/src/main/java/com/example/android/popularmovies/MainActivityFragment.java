@@ -39,18 +39,6 @@ public class MainActivityFragment extends Fragment  {
     private GridView gView;
     private ImageView imgView;
 
-//    Movie[] allMovies = {
-//            new Movie(1,"Interstellar"),
-//            new Movie(2,"Star wars"),
-//            new Movie(3,"The Prestige"),
-//            new Movie(4,"Scene"),
-//            new Movie(5,"Captain America"),
-//            new Movie(6,"Batman"),
-//            new Movie(7,"Sultan"),
-//            new Movie(8,"Superman")
-//
-//    };
-
 
 
 
