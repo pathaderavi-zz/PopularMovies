@@ -6,10 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovies.data.QueryUtils;
 
 import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -20,6 +22,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView example2;
     private TextView example3;
     private TextView example4;
+    Toast toast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 //
 //            }
 //        }
+        example = (TextView) findViewById(R.id.example);
+        example1 = (TextView) findViewById(R.id.example1);
+        example2 = (TextView) findViewById(R.id.example2);
+        example3 = (TextView) findViewById(R.id.example3);
+        example4 =  (TextView) findViewById(R.id.example4);
         String id = null;
         Intent movieid = getIntent();
         //Log.d("Activity Started",id);
@@ -70,19 +78,16 @@ public class MovieDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(SingleMovie singleMovie) {
             super.onPostExecute(singleMovie);
-            example = (TextView) findViewById(R.id.example);
-            example1 = (TextView) findViewById(R.id.example1);
-            example2 = (TextView) findViewById(R.id.example2);
-            example3 = (TextView) findViewById(R.id.example3);
-            example4 = (TextView) findViewById(R.id.example4);
+
             example.setText(singleMovie.title);
-            Log.d("Title",singleMovie.title);
+
+
             example1.setText(singleMovie.date);
-            Log.d("date",singleMovie.date);
+            //Log.d("date",singleMovie.date);
             example2.setText(singleMovie.poster);
-            Log.d("poster",singleMovie.poster);
+            //Log.d("poster",singleMovie.poster);
             example3.setText(singleMovie.rating);
-            Log.d("rating",singleMovie.rating);
+            //Log.d("rating",singleMovie.rating);
             example4.setText(singleMovie.synopsis);
 
 

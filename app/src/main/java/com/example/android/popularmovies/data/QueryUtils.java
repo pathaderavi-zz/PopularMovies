@@ -181,12 +181,10 @@ public class QueryUtils {
 
         try{
 
-            JSONObject baseObject = new JSONObject(json);
+            JSONObject current = new JSONObject(json);
 
-            JSONArray baseArray = baseObject.getJSONArray("results");
-            for(int i = 0 ; i < baseArray.length() ; i++){
-
-                JSONObject current = baseArray.getJSONObject(i);
+            //JSONArray baseArray = baseObject.getJSONArray(json);
+            //JSONObject current = baseArray.getJSONObject(i);
 
                 t = current.getString("title");
                 p = "http://image.tmdb.org/t/p/w185"+current.getString("poster_path");
@@ -195,7 +193,7 @@ public class QueryUtils {
                 d = current.getString("release_date");
 
 
-            }
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -206,8 +204,10 @@ public class QueryUtils {
         return m;
     }
     public static SingleMovie fetchSingle(String id){
-        movieID = id;
-        URL url = createURLforMovie(stringURL);
+       // movieID = id;
+        String movieDetailURL1 = "https://api.themoviedb.org/3/movie/"+id+"?api_key="+API_KEY;
+        Log.d(movieID+"ID of the Movie",movieDetailURL1);
+        URL url = createURLforMovie(movieDetailURL1);
 
         String jsonR = "";
         try{
