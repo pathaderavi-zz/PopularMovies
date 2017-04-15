@@ -1,5 +1,9 @@
 package com.example.android.popularmovies.data;
 
+import android.icu.text.SimpleDateFormat;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.example.android.popularmovies.Movie;
@@ -15,8 +19,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.Format;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
@@ -24,21 +31,29 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
  * Created by ravikiranpathade on 4/13/17.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class QueryUtils {
 
     private final static String API_KEY = "c9a7eeb9aa2533f06119e9eb9bfeb800";
 
-    private final static String stringURL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&primary_release_date.gte=2017-01-01&primary_release_date.lte=2017-03-03&api_key="+API_KEY;
-
+    private final static String stringURL = "https://api.themoviedb.org/3/discover/movie?release_date.gte=2017-01-01&release_date.lte=2017-04-04&api_key="+API_KEY;
+    // "&sort_by=popularity.desc"
+    private final static String sortQuery = "sort_by";
     private static String movieID;
-    private final static String movieDetailURL = "https://api.themoviedb.org/3/movie/"+movieID+"?api_key="+API_KEY;
+    private final static String movieDetailURL = "https://api.themoviedb.org/3/movie/"+movieID+"?api_key="+API_KEY+"";
 
     public QueryUtils(){
 
     }
 
-    public static List<Movie> fetchMovies(){
-        URL url = createURL(stringURL);
+    public static List<Movie> fetchMovies(String query){
+
+        Uri uri = Uri.parse(stringURL)
+                .buildUpon().appendQueryParameter(sortQuery,query).
+                        build();
+
+        URL url = createURL(uri.toString());
+        Log.d("stringurl",uri.toString());
 
         String jsonR = "";
         try{
@@ -191,7 +206,7 @@ public class QueryUtils {
                 s = current.getString("overview");
                 r = current.getString("vote_average")+"/10";
                 d = current.getString("release_date");
-
+                Log.d("Before Putting",d);
 
 
 

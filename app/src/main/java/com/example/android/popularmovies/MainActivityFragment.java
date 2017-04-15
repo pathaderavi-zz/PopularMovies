@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -13,6 +14,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -41,7 +45,7 @@ public class MainActivityFragment extends Fragment  {
 
 
 
-
+    Activity test;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -79,13 +83,16 @@ public class MainActivityFragment extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        new FetchMovies().execute();
+
+        new FetchMovies().execute("popularity.desc");
+
+
     }
     View rootView;
     public String location = "";
@@ -101,20 +108,22 @@ public class MainActivityFragment extends Fragment  {
 
         // Inflate the layout for this fragment
         return rootView;
+        //setHasOptionsMenu(true);
     }
 
 
 
 
-    public class FetchMovies extends AsyncTask<Void, Void, List<Movie>>{
+    public class FetchMovies extends AsyncTask<String, Void, List<Movie>>{
 
 
         @Override
-        protected List doInBackground(Void... params) {
+        protected List doInBackground(String... params) {
             List<Movie> newList = new ArrayList<>();
+            String q = params[0];
 
             try{
-                newList = QueryUtils.fetchMovies();
+                newList = QueryUtils.fetchMovies(q);
                 return newList;
 
             }
@@ -160,5 +169,25 @@ public class MainActivityFragment extends Fragment  {
             }
         }
     }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int menuItem = item.getItemId();
 
+        if(menuItem == R.id.action_sort){
+            String sortby = "vote_average.desc";
+            new FetchMovies().execute(sortby);
+        }
+        if(menuItem == R.id.action_sort_pop){
+            String sortby = "popularity.desc";
+            new FetchMovies().execute(sortby);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.sort,menu);
+
+    }
 }

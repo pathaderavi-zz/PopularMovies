@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.icu.text.SimpleDateFormat;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
@@ -20,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static android.R.attr.id;
@@ -34,10 +36,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     //private static String id;
     private TextView example;
     private ImageView image;
-    private TextView example2;
+    private TextView movie_title;
+
     private TextView example3;
     private TextView example4;
-    Toolbar myToolBar;
+    private TextView date;
+
     String imgURL = null;
     Toast toast;
     Context context;
@@ -55,14 +59,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-        myToolBar = (Toolbar) findViewById(R.id.child_toolbar);
+
         //setSupportActionBar(myToolBar);
-
-
-
-
-        //example1 = (TextView) findViewById(R.id.example1);
-        example2 = (TextView) findViewById(R.id.example2);
+        movie_title = (TextView) findViewById(R.id.movie_title_detail);
         example3 = (TextView) findViewById(R.id.example3);
         example4 =  (TextView) findViewById(R.id.example4);
         String id = null;
@@ -105,16 +104,17 @@ public class MovieDetailActivity extends AppCompatActivity {
         protected void onPostExecute(SingleMovie singleMovie) {
             super.onPostExecute(singleMovie);
 
-            myToolBar.setTitle(singleMovie.title);
-
-
+            //myToolBar.setTitle(singleMovie.title);
+            movie_title.setText(singleMovie.title);
+            date = (TextView) findViewById(R.id.date);
             imgURL = singleMovie.poster;
             image = (ImageView) findViewById(R.id.image_movie);
-            example2.setText(singleMovie.poster);
-            //Log.d("poster",singleMovie.poster);
-            example3.setText(singleMovie.rating);
+            example3.setText("Rating : "+singleMovie.rating);
             //Log.d("rating",singleMovie.rating);
             example4.setText(singleMovie.synopsis);
+
+
+            date.setText(singleMovie.date);
 
         Picasso.with(context)
                 .load(imgURL).resize(320,470)

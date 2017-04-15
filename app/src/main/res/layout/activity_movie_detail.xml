@@ -8,45 +8,64 @@
     tools:context="com.example.android.popularmovies.MovieDetailActivity"
     android:orientation="vertical"
     >
-    <android.support.v7.widget.Toolbar
-        android:layout_height="100dp"
-        android:layout_width="match_parent"
-        android:id="@+id/child_toolbar"
-        android:background="#AE7995"
-        android:titleTextAppearance="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
-        >
+   <TextView
+       android:layout_height="wrap_content"
+       android:layout_width="match_parent"
+       android:id="@+id/movie_title_detail"
+       android:background="#31ABB9"
+       android:textColor="#FFFFFF"
+       android:textSize="40sp"
+       android:paddingTop="20dp"
+       android:paddingBottom="20dp"
+       android:paddingLeft="10dp"
+       android:shadowColor="#000000"
+       android:shadowRadius="10">
 
-    </android.support.v7.widget.Toolbar>
+   </TextView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+
         android:layout_marginTop="20dp">
 
         <ImageView
             android:id="@+id/image_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/example2"
+            android:id="@+id/date"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:textSize="25sp"
+            android:layout_marginBottom="5dp"/>
 
-
+        <TextView
+            android:id="@+id/example3"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"/>
+        <TextView
+            android:id="@+id/example4"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+    </LinearLayout>
     </LinearLayout>
 
 
-    <TextView
-        android:id="@+id/example3"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
-    <TextView
-        android:id="@+id/example4"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+
 
 </LinearLayout>
