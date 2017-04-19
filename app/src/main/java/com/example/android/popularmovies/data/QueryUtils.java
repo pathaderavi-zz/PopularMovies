@@ -1,5 +1,6 @@
 package com.example.android.popularmovies.data;
 
+import android.icu.text.DateFormat;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
@@ -206,7 +207,24 @@ public class QueryUtils {
                 s = current.getString("overview");
                 r = current.getString("vote_average")+"/10";
                 d = current.getString("release_date");
-                Log.d("Before Putting",d);
+
+                //Added code for Dateformat
+
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                try{
+
+                    Date startDate = df.parse(d);
+
+                    String newDate = df.format(startDate);
+
+                    Log.d("Sample Date",newDate);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            //Date Code end
+
+            Log.d("Before Putting",d);
 
 
 
