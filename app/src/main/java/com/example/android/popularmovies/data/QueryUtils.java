@@ -164,7 +164,7 @@ public class QueryUtils {
                 String mName = current.getString("poster_path");
                 String title = current.getString("title");
 
-                String movieName = "http://image.tmdb.org/t/p/w185"+mName;
+                String movieName = "http://image.tmdb.org/t/p/w600"+mName;
 
                 String id = current.getString("id");
 
