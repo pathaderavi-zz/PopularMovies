@@ -1,7 +1,6 @@
 package com.example.android.popularmovies.data;
 
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
+
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -25,6 +24,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
@@ -211,13 +212,14 @@ public class QueryUtils {
                 //Added code for Dateformat
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat df1 = new SimpleDateFormat("MMMM dd yyyy");
                 try{
 
                     Date startDate = df.parse(d);
 
-                    String newDate = df.format(startDate);
+                    d = df1.format(startDate);
 
-                    Log.d("Sample Date",newDate);
+                    //d = newDate;
                 }
                 catch (Exception e){
                     e.printStackTrace();
