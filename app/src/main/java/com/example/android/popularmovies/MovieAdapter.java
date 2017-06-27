@@ -40,7 +40,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
                     R.layout.flavor_item, parent, false);
         }
         ImageView id = (ImageView) convertView.findViewById(R.id.image_poster);
-        TextView name = (TextView) convertView.findViewById(R.id.flavor_text);
+        //TextView name = (TextView) convertView.findViewById(R.id.flavor_text);
 
         Picasso.with(getContext()).load(m.id).into(id);
         //name.setText(m.movieName);

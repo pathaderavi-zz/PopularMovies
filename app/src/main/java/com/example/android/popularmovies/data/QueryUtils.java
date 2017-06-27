@@ -38,7 +38,7 @@ public class QueryUtils {
 
     private final static String API_KEY = "c9a7eeb9aa2533f06119e9eb9bfeb800";
 
-    private final static String stringURL = "https://api.themoviedb.org/3/discover/movie?release_date.gte=2017-01-01&release_date.lte=2017-04-04&api_key="+API_KEY;
+    private final static String stringURL = "http://api.themoviedb.org/3/movie/popular?api_key="+API_KEY;
     // "&sort_by=popularity.desc"
     private final static String sortQuery = "sort_by";
     private static String movieID;
