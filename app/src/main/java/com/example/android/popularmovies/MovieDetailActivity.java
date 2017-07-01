@@ -6,13 +6,21 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.media.Image;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +34,7 @@ import java.util.List;
 
 import static android.R.attr.id;
 import static android.R.attr.title;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.os.Build.VERSION_CODES.M;
 import static java.lang.System.load;
@@ -43,12 +52,27 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView date;
 
     String imgURL = null;
+
     Toast toast;
     Context context;
     List<String> ab = new ArrayList<>();
+    Intent watchTrailer;
+   // Button button;
+    String id ;
+    List<MovieTrailerDetails> mTrailers;
+    MovieTrailerDetails trailers;
+    TrailerAdapter trailerAdapter;
+
+    ListView rootView;
+
+    LayoutInflater inflater;
+
     public MovieDetailActivity(){
 
     }
+
+
+
     public MovieDetailActivity (Context cont){
         context = cont;
     }
@@ -59,12 +83,20 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
+       // button = (Button) findViewById(R.id.testButton);
+
 
         //setSupportActionBar(myToolBar);
         movie_title = (TextView) findViewById(R.id.movie_title_detail);
         example3 = (TextView) findViewById(R.id.example3);
         example4 =  (TextView) findViewById(R.id.example4);
-        String id = null;
+        mTrailers = new ArrayList<>();
+
+        inflater = LayoutInflater.from(context);
+
+        //rootView  = (ListView) findViewById(R.id.trailerList);
+
+
 
         Intent movieid = getIntent();
         //Log.d("Activity Started",id);
@@ -84,6 +116,8 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
     }
+
+
     public class FetchSingleMovie extends AsyncTask<String, Void, SingleMovie>{
         @Override
         protected SingleMovie doInBackground(String... params) {
@@ -93,6 +127,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 m = QueryUtils.fetchSingle(params[0]);
 
+                mTrailers = QueryUtils.fetchVids(id);
+
+
+
+
+
+
 
             }
             catch(Exception e){e.printStackTrace();}
@@ -100,8 +141,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             return m;
         }
 
+
         @Override
-        protected void onPostExecute(SingleMovie singleMovie) {
+        protected void onPostExecute(final SingleMovie singleMovie) {
             super.onPostExecute(singleMovie);
 
             //myToolBar.setTitle(singleMovie.title);
@@ -110,17 +152,38 @@ public class MovieDetailActivity extends AppCompatActivity {
             imgURL = singleMovie.poster;
             image = (ImageView) findViewById(R.id.image_movie);
             example3.setText("Rating : "+singleMovie.rating);
-            //Log.d("rating",singleMovie.rating);
+
             example4.setText(singleMovie.synopsis);
+
+            ViewGroup view = (ViewGroup) findViewById(R.id.viewGroup);
+//            LayoutInflater inflater = LayoutInflater.from(context);
+//            View customView = inflater.inflate(R.layout.list_trailers,view,false);
+
+
+            TrailerAdapter listAdapter = new TrailerAdapter(context,mTrailers);
+            ListView listView = (ListView) findViewById(R.id.trailerList);
+
+            listView.setAdapter(listAdapter);
+
+            Log.d("Size of array",String.valueOf(mTrailers.size()));
+
+
+
 
 
             date.setText(singleMovie.date);
+
+
 
         Picasso.with(context)
                 .load(imgURL).resize(320,470)
                 .into(image);
 
 
+
+
+
         }
+
     }
 }
