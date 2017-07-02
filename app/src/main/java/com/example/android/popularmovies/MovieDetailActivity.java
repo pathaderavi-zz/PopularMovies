@@ -11,6 +11,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -40,6 +42,8 @@ import static android.os.Build.VERSION_CODES.M;
 import static java.lang.System.load;
 
 public class MovieDetailActivity extends AppCompatActivity {
+
+    private RecyclerView mRecycler;
 
 
     //private static String id;
@@ -85,6 +89,12 @@ public class MovieDetailActivity extends AppCompatActivity {
 
        // button = (Button) findViewById(R.id.testButton);
 
+        mRecycler = (RecyclerView) findViewById(R.id.trailerList);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mRecycler.setLayoutManager(layoutManager);
+        mRecycler.setHasFixedSize(true);
+
+
 
         //setSupportActionBar(myToolBar);
         movie_title = (TextView) findViewById(R.id.movie_title_detail);
@@ -92,7 +102,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         example4 =  (TextView) findViewById(R.id.example4);
         mTrailers = new ArrayList<>();
 
-        inflater = LayoutInflater.from(context);
+        //inflater = LayoutInflater.from(context);
+        trailerAdapter = new TrailerAdapter(mTrailers);
+        mRecycler.setAdapter(trailerAdapter);
 
         //rootView  = (ListView) findViewById(R.id.trailerList);
 
@@ -160,15 +172,17 @@ public class MovieDetailActivity extends AppCompatActivity {
 //            View customView = inflater.inflate(R.layout.list_trailers,view,false);
 
 
-            TrailerAdapter listAdapter = new TrailerAdapter(context,mTrailers);
-            ListView listView = (ListView) findViewById(R.id.trailerList);
-
-            listView.setAdapter(listAdapter);
+//            TrailerAdapter listAdapter = new TrailerAdapter(context,mTrailers);
+//            ListView listView = (ListView) findViewById(R.id.trailerList);
+//
+//            listView.setAdapter(listAdapter);
 
             Log.d("Size of array",String.valueOf(mTrailers.size()));
 
 
-
+            if(mTrailers!=null){
+                trailerAdapter.setData(mTrailers);
+            }
 
 
             date.setText(singleMovie.date);

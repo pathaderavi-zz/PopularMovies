@@ -72,7 +72,7 @@
 
     </LinearLayout>
 
-    <ListView android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/trailerList"
         android:orientation="horizontal"
@@ -81,7 +81,7 @@
         android:layout_marginBottom="50dp">
 
 
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
 
 </LinearLayout>
