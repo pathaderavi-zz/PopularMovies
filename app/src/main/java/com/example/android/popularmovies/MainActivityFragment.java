@@ -90,7 +90,7 @@ public class MainActivityFragment extends Fragment  {
         }
 
 
-        new FetchMovies().execute("popularity.desc");
+        new FetchMovies().execute("popular");
 
 
     }
@@ -174,11 +174,11 @@ public class MainActivityFragment extends Fragment  {
         int menuItem = item.getItemId();
 
         if(menuItem == R.id.action_sort){
-            String sortby = "vote_average.desc";
+            String sortby = "top_rated";
             new FetchMovies().execute(sortby);
         }
         if(menuItem == R.id.action_sort_pop){
-            String sortby = "popularity.desc";
+            String sortby = "popular";
             new FetchMovies().execute(sortby);
         }
         return super.onOptionsItemSelected(item);

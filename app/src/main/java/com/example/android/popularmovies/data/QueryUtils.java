@@ -42,7 +42,9 @@ public class QueryUtils {
 
     private final static String API_KEY = "c9a7eeb9aa2533f06119e9eb9bfeb800";
 
-    private final static String stringURL = "http://api.themoviedb.org/3/movie/popular?api_key="+API_KEY;
+    private final static String stringURL = "http://api.themoviedb.org/3/movie/";
+
+    public final static String lastAppend = "?api_key="+API_KEY;;
     // "&sort_by=popularity.desc"
     private final static String sortQuery = "sort_by";
     private static String movieID;
@@ -56,8 +58,8 @@ public class QueryUtils {
 
     public static List<Movie> fetchMovies(String query){
 
-        Uri uri = Uri.parse(stringURL)
-                .buildUpon().appendQueryParameter(sortQuery,query).
+        Uri uri = Uri.parse(stringURL+query+lastAppend)
+                .buildUpon().
                         build();
 
         URL url = createURL(uri.toString());
