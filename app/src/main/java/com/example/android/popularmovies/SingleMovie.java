@@ -10,9 +10,9 @@ public class SingleMovie {
     String synopsis; //overview
     String rating; //vote_average
     String date; //release_date
-    String trailerUrl;
+   // String trailerUrl;
 
-    public SingleMovie(String t, String p, String s, String r, String d, String trailer){
+    public SingleMovie(String t, String p, String s, String r, String d){
         this.title = t;
 
         this.poster = p;
@@ -23,7 +23,7 @@ public class SingleMovie {
 
         this.date = d ;
 
-        this.trailerUrl = trailer;
+        //this.trailerUrl = trailer;
 
     }
 

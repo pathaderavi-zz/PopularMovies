@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.android.popularmovies.Movie;
 import com.example.android.popularmovies.MovieDetailActivity;
 import com.example.android.popularmovies.MovieTrailerDetails;
+import com.example.android.popularmovies.ReviewDetails;
 import com.example.android.popularmovies.SingleMovie;
 
 import org.json.JSONArray;
@@ -40,6 +41,7 @@ import static android.media.CamcorderProfile.get;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class QueryUtils {
 
+
     private final static String API_KEY = "c9a7eeb9aa2533f06119e9eb9bfeb800";
 
     private final static String stringURL = "http://api.themoviedb.org/3/movie/";
@@ -51,6 +53,9 @@ public class QueryUtils {
     private final static String movieDetailURL = "https://api.themoviedb.org/3/movie/"+movieID+"?api_key="+API_KEY+"";
 
     private final static String videoTrailerURL = "http://api.themoviedb.org/3/movie/";
+
+    private final static String reviewsUrl = "http://api.themoviedb.org/3/movie/";
+    private final static String finalReview = "/reviews?api_key=";
 
     public QueryUtils(){
 
@@ -216,6 +221,65 @@ public class QueryUtils {
         catch (Exception e){}
         return trailers;
     }
+    public static List<ReviewDetails> extractJSONforReviews(String json){
+        if(json.isEmpty()){
+            return null;
+        }
+        List<ReviewDetails> mReviewDetails = new ArrayList<>();
+        try{
+            JSONObject baseObject = new JSONObject(json);
+            JSONArray jsonArray = baseObject.getJSONArray("results");
+            for(int i=0;i<jsonArray.length();i++){
+                JSONObject current = jsonArray.getJSONObject(i);
+
+                String author = current.getString("author");
+                String content = current.getString("content");
+                String url = current.getString("url");
+                mReviewDetails.add(new ReviewDetails(author,content,url));
+                //Log.d(author,url);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return mReviewDetails;
+    }
+    public static List<MovieTrailerDetails> fetchVids(String idMovie){
+        String vidsURL = videoTrailerURL+idMovie+"/videos?api_key="+API_KEY;
+
+
+        //Log.d("URL here",vidsURL);
+
+        URL url = createURLforMovie(vidsURL);
+        String jsonResponse = "";
+        try
+        {
+            jsonResponse = makeHTTPrequest(url);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        List<MovieTrailerDetails> trailers = new ArrayList();
+
+        trailers = extarctJSONforTrailers(jsonResponse);
+
+
+        return trailers;
+    }
+    public static List<ReviewDetails> getReviews(String movieId){
+        String reviewUrl = reviewsUrl+movieId+finalReview+API_KEY;
+        //Log.d("Review URL",reviewUrl);
+        URL url = createURLforMovie(reviewUrl);
+        String jsonResponseReviews = "";
+        try{
+            jsonResponseReviews = makeHTTPrequest(url);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<ReviewDetails> reviews = new ArrayList<>();
+        reviews = extractJSONforReviews(jsonResponseReviews);
+        return reviews;
+    }
     public static SingleMovie extractJSONforMovie(String json){
         SingleMovie m;
         String t =null;
@@ -224,6 +288,7 @@ public class QueryUtils {
         String r=null;
         String d=null;
         String tr = null;
+        String d1 = null;
 
         if(json.isEmpty()){
             return null;
@@ -236,23 +301,23 @@ public class QueryUtils {
 
             //JSONArray baseArray = baseObject.getJSONArray(json);
             //JSONObject current = baseArray.getJSONObject(i);
-
+                //String d1;
                 t = current.getString("title");
                 p = "http://image.tmdb.org/t/p/w185"+current.getString("poster_path");
                 s = current.getString("overview");
                 r = current.getString("vote_average")+"/10";
                 d = current.getString("release_date");
-                tr = current.getString("");
+               // tr = current.getString("");
 
                 //Added code for Dateformat
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                DateFormat df1 = new SimpleDateFormat("MMMM dd yyyy");
+                DateFormat df1 = new SimpleDateFormat("MM dd yyyy");
                 try{
 
                     Date startDate = df.parse(d);
 
-                    d = df1.format(startDate);
+                    d1 = df1.format(startDate);
 
                     //d = newDate;
                 }
@@ -261,14 +326,15 @@ public class QueryUtils {
                 }
             //Date Code end
 
-            Log.d("Before Putting",d);
+
 
 
 
         }catch (Exception e){
             e.printStackTrace();
         }finally {
-            m = new SingleMovie(t,p,s,r,d,tr);
+
+            m = new SingleMovie(t,p,s,r,d);
         }
 
         return m;
@@ -293,27 +359,7 @@ public class QueryUtils {
        // Log.d("Movie Title",jsonR);
         return m;
     }
-    public static List<MovieTrailerDetails> fetchVids(String idMovie){
-        String vidsURL = videoTrailerURL+idMovie+"/videos?api_key="+API_KEY;
 
-        //Log.d("URL here",vidsURL);
-
-        URL url = createURLforMovie(vidsURL);
-        String jsonResponse = "";
-        try
-        {
-            jsonResponse = makeHTTPrequest(url);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        List<MovieTrailerDetails> trailers = new ArrayList();
-
-        trailers = extarctJSONforTrailers(jsonResponse);
-
-
-        return trailers;
-    }
 
 //Create URL from the given string
 

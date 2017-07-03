@@ -45,6 +45,9 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private RecyclerView mRecycler;
 
+    private RecyclerView mReviewView;
+    ReviewAdapter mReviewAdapter;
+    ReviewDetails mReviewDetails;
 
     //private static String id;
     private TextView example;
@@ -54,6 +57,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private TextView example3;
     private TextView example4;
     private TextView date;
+    List<ReviewDetails> mReviews;
 
     String imgURL = null;
 
@@ -64,6 +68,7 @@ public class MovieDetailActivity extends AppCompatActivity {
    // Button button;
     String id ;
     List<MovieTrailerDetails> mTrailers;
+
     MovieTrailerDetails trailers;
     TrailerAdapter trailerAdapter;
 
@@ -94,17 +99,27 @@ public class MovieDetailActivity extends AppCompatActivity {
         mRecycler.setLayoutManager(layoutManager);
         mRecycler.setHasFixedSize(true);
 
+        mReviewView = (RecyclerView) findViewById(R.id.reviewsList);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        mReviewView.setLayoutManager(layoutManager1);
+        mReviewView.setHasFixedSize(true);
+
 
 
         //setSupportActionBar(myToolBar);
         movie_title = (TextView) findViewById(R.id.movie_title_detail);
         example3 = (TextView) findViewById(R.id.example3);
         example4 =  (TextView) findViewById(R.id.example4);
+
         mTrailers = new ArrayList<>();
+        mReviews = new ArrayList<>();
 
         //inflater = LayoutInflater.from(context);
         trailerAdapter = new TrailerAdapter(mTrailers);
         mRecycler.setAdapter(trailerAdapter);
+
+        mReviewAdapter = new ReviewAdapter(mReviews);
+        mReviewView.setAdapter(mReviewAdapter);
 
         //rootView  = (ListView) findViewById(R.id.trailerList);
 
@@ -141,11 +156,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 mTrailers = QueryUtils.fetchVids(id);
 
-
-
-
-
-
+                mReviews = QueryUtils.getReviews(id);
 
             }
             catch(Exception e){e.printStackTrace();}
@@ -183,7 +194,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             if(mTrailers!=null){
                 trailerAdapter.setData(mTrailers);
             }
-
+            if(mReviews!=null){
+                mReviewAdapter.setData(mReviews);
+            }
 
             date.setText(singleMovie.date);
 

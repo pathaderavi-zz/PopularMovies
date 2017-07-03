@@ -63,26 +63,53 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="5dp"/>
-        <TextView
-            android:id="@+id/example4"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"/>
 
     </LinearLayout>
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/example4"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="10dp"
+        android:textColor="#000"/>
+
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Trailers"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"
+        android:textColor="#000"
+        />
 
     <android.support.v7.widget.RecyclerView android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:id="@+id/trailerList"
         android:orientation="horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="50dp">
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
 
     </android.support.v7.widget.RecyclerView>
 
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="Reviews"
+        android:textSize="20sp"
+        android:layout_marginLeft="16dp"
+        android:textColor="#000"
+        />
+    <android.support.v7.widget.RecyclerView android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:id="@+id/reviewsList"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
+
+    </android.support.v7.widget.RecyclerView>
 </LinearLayout>
 </ScrollView>

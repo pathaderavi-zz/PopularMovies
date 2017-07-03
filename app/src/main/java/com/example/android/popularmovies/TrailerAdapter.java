@@ -44,6 +44,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.MovieVie
         void onClick(String url);
     }
     private TrailerOnClickListener mTrailerListener;
+
     public void setOnClickListener(TrailerOnClickListener mListener){
         mTrailerListener = mListener;
     }
@@ -95,40 +96,15 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.MovieVie
 
         @Override
         public void onClick(View v) {
-            //
 
-            //Log.d(trailer.trailerName,trailer.trailerUrl+" Recycler");
             int pos = getAdapterPosition();
             String tName = mTrailerData.get(pos).trailerName;
+
             String tUrl = mTrailerData.get(pos).trailerUrl;
             intent = new Intent(Intent.ACTION_VIEW,Uri.parse(tUrl));
             holderContext.startActivity(intent);
-            //Log.d(tName,tUrl+" Recycler");
+
         }
     }
 
-//    @NonNull
-//    @Override
-//    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-//
-//        mContext = getContext();
-//        trailer = getItem(position);
-//        if(convertView == null){
-//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_trailers,parent,false);
-//
-//        }
-//        TextView trailerName = (TextView) convertView.findViewById(R.id.trailer_name);
-//        trailerName.setText(trailer.getTrailerName());
-//
-//        Log.d(trailer.trailerName,trailer.trailerUrl+" Here");
-//        trailerName.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getContext().startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(trailer.trailerUrl)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
-//
-//            }
-//        });
-//
-//        return convertView;
-//    }
 }
