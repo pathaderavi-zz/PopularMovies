@@ -1,5 +1,6 @@
 package com.example.android.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.data.QueryUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -60,12 +62,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     List<ReviewDetails> mReviews;
 
     String imgURL = null;
-
+    ContentValues cv;
     Toast toast;
     Context context;
     List<String> ab = new ArrayList<>();
     Intent watchTrailer;
-   // Button button;
+    Button addToFav;
     String id ;
     List<MovieTrailerDetails> mTrailers;
 
@@ -120,7 +122,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         mReviewAdapter = new ReviewAdapter(mReviews);
         mReviewView.setAdapter(mReviewAdapter);
-
+        addToFav = (Button) findViewById(R.id.saveFavourite);
         //rootView  = (ListView) findViewById(R.id.trailerList);
 
 
@@ -206,8 +208,28 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .load(imgURL).resize(320,470)
                 .into(image);
 
+        cv = new ContentValues();
+        cv.put(MovieContract.MovieEntry.COLUMN_ID,singleMovie.id_m);
+            cv.put(MovieContract.MovieEntry.COLUMN_NAME,singleMovie.title);
+
+            cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,singleMovie.synopsis);
+
+            cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,singleMovie.date);
+
+            cv.put(MovieContract.MovieEntry.COLUMN_VOTE,singleMovie.rating);
 
 
+
+            addToFav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("Uri",MovieContract.MovieEntry.FINAL_URI.toString());
+                    Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI,cv);
+                    if(uri!=null){
+                        Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
 
         }

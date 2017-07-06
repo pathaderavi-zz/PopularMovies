@@ -289,7 +289,7 @@ public class QueryUtils {
         String d=null;
         String tr = null;
         String d1 = null;
-
+        String id_movie = null;
         if(json.isEmpty()){
             return null;
         }
@@ -308,7 +308,7 @@ public class QueryUtils {
                 r = current.getString("vote_average")+"/10";
                 d = current.getString("release_date");
                // tr = current.getString("");
-
+                id_movie = current.getString("id");
                 //Added code for Dateformat
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -334,7 +334,7 @@ public class QueryUtils {
             e.printStackTrace();
         }finally {
 
-            m = new SingleMovie(t,p,s,r,d);
+            m = new SingleMovie(t,p,s,r,d,id_movie);
         }
 
         return m;

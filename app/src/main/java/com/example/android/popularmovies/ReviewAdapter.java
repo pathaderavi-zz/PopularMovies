@@ -85,6 +85,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
             if(mReviewsData.get(id).content.length() >250){
                 content.setText(mReviewsData.get(id).content.substring(0,250)+"...TAP TO SEE FULL REVIEW");
+                //TODO Implement different color schemes for Author name, content and TAP TO SEE
             }else{
             content.setText(mReviewsData.get(id).content);}
             reviewName.setText(mReviewsData.get(id).author);
