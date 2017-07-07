@@ -13,6 +13,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static android.os.Build.ID;
+
 /**
  * Created by ravikiranpathade on 7/6/17.
  */
@@ -48,7 +52,38 @@ public class MovieContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        return null;
+
+
+        final SQLiteDatabase db = movieDBHelper.getReadableDatabase();
+        projection = new String[]{"ID"};
+        uri.buildUpon().appendPath("ID").build();
+        int match = sUrimatcher.match(uri);
+        Log.d(uri.toString(),String.valueOf(match));
+
+
+
+        Cursor retCusor;
+        
+        switch(match){
+            case MOVIES_ID:{
+
+                retCusor = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        null);
+                break;
+            }
+            //TODO
+            case MOVIES:
+
+                default:
+                    throw new UnsupportedOperationException("Unable to find"+uri);
+        }
+
+        return retCusor;
     }
 
     @Nullable
@@ -72,17 +107,21 @@ public class MovieContentProvider extends ContentProvider {
 
         switch (matchUri){
             case MOVIES:
-                    long id = db.insert(MovieContract.MovieEntry.TABLE_NAME,null,values);
-
+                long id;
+                try {
+                     id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
+                }
+                catch(Exception e){
+                    throw new android.database.SQLException("Failed to insert");
+                }
                 if(id>0){
                     returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.FINAL_URI,id);
-                }else{
-                    throw new SQLException("Failed to insert");
                 }
-
+                break;
             case MOVIES_ID:
 
                 default:
+                    throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         getContext().getContentResolver().notifyChange(returnUri,null);
         return returnUri;

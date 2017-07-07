@@ -3,7 +3,9 @@ package com.example.android.popularmovies;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.media.Image;
@@ -49,10 +51,10 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private RecyclerView mReviewView;
     ReviewAdapter mReviewAdapter;
-    ReviewDetails mReviewDetails;
+    //ReviewDetails mReviewDetails;
 
     //private static String id;
-    private TextView example;
+    //private TextView example;
     private ImageView image;
     private TextView movie_title;
 
@@ -65,8 +67,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     ContentValues cv;
     Toast toast;
     Context context;
-    List<String> ab = new ArrayList<>();
-    Intent watchTrailer;
+    //List<String> ab = new ArrayList<>();
+    //Intent watchTrailer;
     Button addToFav;
     String id ;
     List<MovieTrailerDetails> mTrailers;
@@ -74,9 +76,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     MovieTrailerDetails trailers;
     TrailerAdapter trailerAdapter;
 
-    ListView rootView;
+    Cursor mCursor;
 
-    LayoutInflater inflater;
+   // ListView rootView;
+
+    //LayoutInflater inflater;
 
     public MovieDetailActivity(){
 
@@ -148,6 +152,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
     public class FetchSingleMovie extends AsyncTask<String, Void, SingleMovie>{
+        Toast test;
         @Override
         protected SingleMovie doInBackground(String... params) {
             SingleMovie m = null;
@@ -160,6 +165,16 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 mReviews = QueryUtils.getReviews(id);
 
+            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI,
+                   new String[]{"ID"},
+                    String.valueOf(m.id_m),
+                    null,
+                    null,
+                    null);
+            if(mCursor!=null){
+                test = Toast.makeText(context,"Present",Toast.LENGTH_SHORT);
+                addToFav.setBackgroundColor(Color.RED);
+            }
             }
             catch(Exception e){e.printStackTrace();}
 
@@ -208,28 +223,33 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .load(imgURL).resize(320,470)
                 .into(image);
 
-        cv = new ContentValues();
-        cv.put(MovieContract.MovieEntry.COLUMN_ID,singleMovie.id_m);
-            cv.put(MovieContract.MovieEntry.COLUMN_NAME,singleMovie.title);
-
-            cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,singleMovie.synopsis);
-
-            cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,singleMovie.date);
-
-            cv.put(MovieContract.MovieEntry.COLUMN_VOTE,singleMovie.rating);
 
 
 
             addToFav.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    cv = new ContentValues();
+                    cv.put(MovieContract.MovieEntry.COLUMN_ID,singleMovie.id_m);
+                    cv.put(MovieContract.MovieEntry.COLUMN_NAME,singleMovie.title);
+
+                    cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,singleMovie.synopsis);
+
+                    cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,singleMovie.date);
+
+                    cv.put(MovieContract.MovieEntry.COLUMN_VOTE,singleMovie.rating);
+
                     Log.d("Uri",MovieContract.MovieEntry.FINAL_URI.toString());
                     Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI,cv);
                     if(uri!=null){
                         Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
                     }
+                    test.show();
                 }
             });
+
+
 
 
         }
