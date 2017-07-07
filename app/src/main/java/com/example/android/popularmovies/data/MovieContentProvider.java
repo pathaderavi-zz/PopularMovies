@@ -53,34 +53,36 @@ public class MovieContentProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
 
-
+        //uri = Uri.parse(uri.toString()+"/#");
         final SQLiteDatabase db = movieDBHelper.getReadableDatabase();
-        projection = new String[]{"ID"};
-        uri.buildUpon().appendPath("ID").build();
+        selectionArgs = new String[]{"ID=?"};
+        //uri.buildUpon().appendPath("ID").build();
         int match = sUrimatcher.match(uri);
-        Log.d(uri.toString(),String.valueOf(match));
+
+        Log.d(uri.toString(),selection);
 
 
 
         Cursor retCusor;
-        
+
         switch(match){
             case MOVIES_ID:{
 
                 retCusor = db.query(MovieContract.MovieEntry.TABLE_NAME,
-                        projection,
-                        selection,
-                        selectionArgs,
+                        null,
+                        "ID=?",
+                        new String[] {selection},
                         null,
                         null,
                         null);
+                Log.d(String.valueOf(retCusor.getCount()),"Here");
                 break;
             }
             //TODO
             case MOVIES:
 
                 default:
-                    throw new UnsupportedOperationException("Unable to find"+uri);
+                    throw new UnsupportedOperationException("Unable to find "+uri);
         }
 
         return retCusor;
@@ -95,6 +97,7 @@ public class MovieContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
+
 
         int matchUri = sUrimatcher.match(uri);
         Log.d("URI",uri.toString());

@@ -165,16 +165,14 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 mReviews = QueryUtils.getReviews(id);
 
-            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI,
+
+            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
                    new String[]{"ID"},
                     String.valueOf(m.id_m),
                     null,
                     null,
                     null);
-            if(mCursor!=null){
-                test = Toast.makeText(context,"Present",Toast.LENGTH_SHORT);
-                addToFav.setBackgroundColor(Color.RED);
-            }
+
             }
             catch(Exception e){e.printStackTrace();}
 
@@ -214,9 +212,20 @@ public class MovieDetailActivity extends AppCompatActivity {
             if(mReviews!=null){
                 mReviewAdapter.setData(mReviews);
             }
-
+            //addToFav.setBackgroundColor(Color.GREEN);
             date.setText(singleMovie.date);
+            //Log.d("Cursor Length",String.valueOf(mCursor.getCount()));
+            if(mCursor.getCount()!=0){
+                test = Toast.makeText(context,mCursor.toString(),Toast.LENGTH_SHORT);
+                addToFav.setBackgroundColor(Color.RED);
+                addToFav.setText("Remove from Favouites");
 
+            }
+//            while (mCursor != null) {
+//                mCursor.moveToNext();
+//                Log.d(mCursor.getString(0),"Here");
+//
+//            }
 
 
         Picasso.with(context)
@@ -248,9 +257,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                     test.show();
                 }
             });
-
-
-
+            if(mCursor!=null){
+            mCursor.close();}
 
         }
 
