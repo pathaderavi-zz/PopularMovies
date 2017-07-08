@@ -119,6 +119,7 @@ public class MovieContentProvider extends ContentProvider {
                 }
                 if(id>0){
                     returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.FINAL_URI,id);
+                    Log.d("Hee",returnUri.toString());
                 }
                 break;
             case MOVIES_ID:
@@ -132,7 +133,28 @@ public class MovieContentProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+
+        final SQLiteDatabase db = movieDBHelper.getWritableDatabase();
+        int match = sUrimatcher.match(uri);
+
+        int movieDeleted;
+
+        switch (match){
+            case MOVIES_ID:
+                String id = uri.getPathSegments().get(1);
+                Log.d("path segment",id);
+
+                movieDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,"ID=?", new String[] {id});
+                break;
+            default:
+                throw new UnsupportedOperationException("Unsupported Uri "+uri);
+
+        }
+        if(movieDeleted!=0){
+            getContext().getContentResolver().notifyChange(uri,null);
+            Log.d("Movie Deleted ", String.valueOf(movieDeleted));
+        }
+        return movieDeleted;
     }
 
     @Override

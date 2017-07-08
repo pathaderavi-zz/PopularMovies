@@ -77,6 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     TrailerAdapter trailerAdapter;
 
     Cursor mCursor;
+    SingleMovie m;
 
    // ListView rootView;
 
@@ -155,7 +156,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Toast test;
         @Override
         protected SingleMovie doInBackground(String... params) {
-            SingleMovie m = null;
+
 
         try{
 
@@ -233,34 +234,60 @@ public class MovieDetailActivity extends AppCompatActivity {
                 .into(image);
 
 
-
-
             addToFav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                    @Override
+                    public void onClick(View v) {
 
-                    cv = new ContentValues();
-                    cv.put(MovieContract.MovieEntry.COLUMN_ID,singleMovie.id_m);
-                    cv.put(MovieContract.MovieEntry.COLUMN_NAME,singleMovie.title);
 
-                    cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,singleMovie.synopsis);
+                        if(mCursor.getCount()!=0){
+                            Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(m.id_m).build();
+                            Log.d("Cursor",uriDelete.toString());
+                            getContentResolver().delete(uriDelete,null,null);
 
-                    cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,singleMovie.date);
+                            addToFav.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            addToFav.setText("Add to Favourites");
+                            Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+                            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
+                                    new String[]{"ID"},
+                                    String.valueOf(m.id_m),
+                                    null,
+                                    null,
+                                    null);
+                            Log.d("Even",String.valueOf(mCursor.getCount()));
+                        }else{
+                        cv = new ContentValues();
+                        cv.put(MovieContract.MovieEntry.COLUMN_ID,singleMovie.id_m);
+                        cv.put(MovieContract.MovieEntry.COLUMN_NAME,singleMovie.title);
 
-                    cv.put(MovieContract.MovieEntry.COLUMN_VOTE,singleMovie.rating);
+                        cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,singleMovie.synopsis);
 
-                    Log.d("Uri",MovieContract.MovieEntry.FINAL_URI.toString());
-                    Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI,cv);
-                    if(uri!=null){
-                        Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
+                        cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,singleMovie.date);
+
+                        cv.put(MovieContract.MovieEntry.COLUMN_VOTE,singleMovie.rating);
+
+                        Log.d("Uri",MovieContract.MovieEntry.FINAL_URI.toString());
+                        Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI,cv);
+                        if(uri!=null){
+                            Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
+                        }
+                        addToFav.setBackgroundColor(Color.RED);
+                        addToFav.setText("Remove from Facourites");
+
+                        mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
+                                new String[]{"ID"},
+                                String.valueOf(m.id_m),
+                                null,
+                                null,
+                                null);
+                        Log.d("Even",String.valueOf(mCursor.getCount()));
+                        //test.show();
                     }
-                    test.show();
+                    }
+                });
+            mCursor.close();
                 }
-            });
-            if(mCursor!=null){
-            mCursor.close();}
 
         }
 
     }
-}
+
