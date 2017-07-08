@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.icu.text.SimpleDateFormat;
 import android.media.Image;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBar;
@@ -78,6 +80,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     Cursor mCursor;
     SingleMovie m;
+    //boolean isCon = checkConnection();
 
    // ListView rootView;
 
@@ -105,7 +108,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mRecycler.setLayoutManager(layoutManager);
         mRecycler.setHasFixedSize(true);
-
+        date = (TextView) findViewById(R.id.date);
         mReviewView = (RecyclerView) findViewById(R.id.reviewsList);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         mReviewView.setLayoutManager(layoutManager1);
@@ -141,12 +144,17 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             }
         }
+        if(!checkConnection()){
+            TextView trailersHeading = (TextView) findViewById(R.id.trailersHeading);
+            TextView reviewHeading = (TextView) findViewById(R.id.reviewHeading);
 
+            trailersHeading.setText("");
+            reviewHeading.setText("");
+
+
+
+        }
         new FetchSingleMovie().execute(id);
-
-
-
-
 
 
     }
@@ -159,17 +167,21 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         try{
+                if(checkConnection()) {
 
-                m = QueryUtils.fetchSingle(params[0]);
+                    m = QueryUtils.fetchSingle(params[0]);
 
-                mTrailers = QueryUtils.fetchVids(id);
-
-                mReviews = QueryUtils.getReviews(id);
+                    mTrailers = QueryUtils.fetchVids(id);
 
 
-            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
+                    mReviews = QueryUtils.getReviews(id);
+
+
+                }
+
+            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(id)).build(),
                    new String[]{"ID"},
-                    String.valueOf(m.id_m),
+                    String.valueOf(id),
                     null,
                     null,
                     null);
@@ -184,110 +196,128 @@ public class MovieDetailActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final SingleMovie singleMovie) {
             super.onPostExecute(singleMovie);
+            if (singleMovie != null) {
+                //myToolBar.setTitle(singleMovie.title);
 
-            //myToolBar.setTitle(singleMovie.title);
-            movie_title.setText(singleMovie.title);
-            date = (TextView) findViewById(R.id.date);
-            imgURL = singleMovie.poster;
-            image = (ImageView) findViewById(R.id.image_movie);
-            example3.setText("Rating : "+singleMovie.rating);
+                if(checkConnection()) {
+                    movie_title.setText(m.title);
+                    imgURL = singleMovie.poster;
+                    example3.setText("Rating : " + singleMovie.rating);
+                    example4.setText(singleMovie.synopsis);
+                    date.setText(singleMovie.date);
 
-            example4.setText(singleMovie.synopsis);
-
-            ViewGroup view = (ViewGroup) findViewById(R.id.viewGroup);
-//            LayoutInflater inflater = LayoutInflater.from(context);
-//            View customView = inflater.inflate(R.layout.list_trailers,view,false);
-
-
-//            TrailerAdapter listAdapter = new TrailerAdapter(context,mTrailers);
-//            ListView listView = (ListView) findViewById(R.id.trailerList);
-//
-//            listView.setAdapter(listAdapter);
-
-            Log.d("Size of array",String.valueOf(mTrailers.size()));
+                    image = (ImageView) findViewById(R.id.image_movie);
+                    Picasso.with(context)
+                            .load(imgURL).resize(320, 470)
+                            .into(image);
+                }
+            }
 
 
-            if(mTrailers!=null){
+            if (mTrailers != null) {
                 trailerAdapter.setData(mTrailers);
             }
-            if(mReviews!=null){
+            if (mReviews != null) {
                 mReviewAdapter.setData(mReviews);
             }
             //addToFav.setBackgroundColor(Color.GREEN);
-            date.setText(singleMovie.date);
+
             //Log.d("Cursor Length",String.valueOf(mCursor.getCount()));
-            if(mCursor.getCount()!=0){
-                test = Toast.makeText(context,mCursor.toString(),Toast.LENGTH_SHORT);
+            if (mCursor.getCount() != 0) {
+                //test = Toast.makeText(context, mCursor.toString(), Toast.LENGTH_SHORT);
                 addToFav.setBackgroundColor(Color.RED);
                 addToFav.setText("Remove from Favouites");
-
             }
-//            while (mCursor != null) {
-//                mCursor.moveToNext();
-//                Log.d(mCursor.getString(0),"Here");
-//
-//            }
+
+            if(!checkConnection() && mCursor.getCount()!=0){
+                mCursor.moveToNext();
+                movie_title.setText(mCursor.getString(mCursor.getColumnIndex("NAME")));
+                addToFav.setBackgroundColor(Color.RED);
+                addToFav.setText("Remove from Favouites");
+                date.setText(String.valueOf("Release Date : "+mCursor.getString(mCursor.getColumnIndex("RELEASE_DATE")).toString()));
+                example3.setText("Rating : "+String.valueOf(mCursor.getString(mCursor.getColumnIndex("VOTE"))));
+                example4.setText("Overview : "+mCursor.getString(mCursor.getColumnIndex(MovieContract.MovieEntry.COLUMN_OVERVIEW)));
+            }
+            if(!checkConnection() && mCursor.getCount()==0){
+                addToFav.setVisibility(View.INVISIBLE);
+            }
 
 
-        Picasso.with(context)
-                .load(imgURL).resize(320,470)
-                .into(image);
 
 
-            addToFav.setOnClickListener(new View.OnClickListener() {
+                addToFav.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
+                        if (mCursor.getCount() != 0) {
+                            mCursor.moveToLast();
+                            String id_cusor = mCursor.getString(0);
+                            Log.d("Cursor ID is",id_cusor   );
+                            Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(mCursor.getString(0)).build();
 
-                        if(mCursor.getCount()!=0){
-                            Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(m.id_m).build();
-                            Log.d("Cursor",uriDelete.toString());
-                            getContentResolver().delete(uriDelete,null,null);
+                            getContentResolver().delete(uriDelete, null, null);
 
-                            addToFav.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                            addToFav.setBackgroundColor(getResources().getColor(R.color.aquaBanner));
                             addToFav.setText("Add to Favourites");
-                            Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+                            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(mCursor.getString(0))).build(),
+                                    new String[]{"ID"},
+                                    String.valueOf(mCursor.getString(0)),
+                                    null,
+                                    null,
+                                    null);
+
+
+                        } else {
+                            if(!checkConnection()){
+                                addToFav.setVisibility(View.INVISIBLE);
+                            }else{
+                            cv = new ContentValues();
+                            cv.put(MovieContract.MovieEntry.COLUMN_ID, singleMovie.id_m);
+                            cv.put(MovieContract.MovieEntry.COLUMN_NAME, singleMovie.title);
+
+                            cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW, singleMovie.synopsis);
+
+                            cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, singleMovie.date);
+
+                            cv.put(MovieContract.MovieEntry.COLUMN_VOTE, singleMovie.rating);
+
+                            Log.d("Uri", MovieContract.MovieEntry.FINAL_URI.toString());
+                            Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI, cv);
+//                        if(uri!=null){
+//                            Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
+//                        }
+                            addToFav.setBackgroundColor(Color.RED);
+                            addToFav.setText("Remove from Facourites");
+
                             mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
                                     new String[]{"ID"},
                                     String.valueOf(m.id_m),
                                     null,
                                     null,
                                     null);
-                            Log.d("Even",String.valueOf(mCursor.getCount()));
-                        }else{
-                        cv = new ContentValues();
-                        cv.put(MovieContract.MovieEntry.COLUMN_ID,singleMovie.id_m);
-                        cv.put(MovieContract.MovieEntry.COLUMN_NAME,singleMovie.title);
 
-                        cv.put(MovieContract.MovieEntry.COLUMN_OVERVIEW,singleMovie.synopsis);
-
-                        cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE,singleMovie.date);
-
-                        cv.put(MovieContract.MovieEntry.COLUMN_VOTE,singleMovie.rating);
-
-                        Log.d("Uri",MovieContract.MovieEntry.FINAL_URI.toString());
-                        Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI,cv);
-                        if(uri!=null){
-                            Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
+                            //Log.d("Even",String.valueOf(mCursor.getCount()));
+                            //test.show();
                         }
-                        addToFav.setBackgroundColor(Color.RED);
-                        addToFav.setText("Remove from Facourites");
+                        }
 
-                        mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
-                                new String[]{"ID"},
-                                String.valueOf(m.id_m),
-                                null,
-                                null,
-                                null);
-                        Log.d("Even",String.valueOf(mCursor.getCount()));
-                        //test.show();
                     }
-                    }
+
                 });
-            mCursor.close();
-                }
+
+
 
         }
+        }
+    public boolean checkConnection(){
+        ConnectivityManager cm =
+                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+    }
     }
 

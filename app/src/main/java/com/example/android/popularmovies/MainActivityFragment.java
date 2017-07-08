@@ -180,6 +180,8 @@ public class MainActivityFragment extends Fragment  {
         if(menuItem == R.id.action_sort_pop){
             String sortby = "popular";
             new FetchMovies().execute(sortby);
+
+
         }
         return super.onOptionsItemSelected(item);
     }
