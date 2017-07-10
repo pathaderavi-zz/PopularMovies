@@ -12,6 +12,9 @@
     tools:context="com.example.android.popularmovies.MovieDetailActivity"
     android:orientation="vertical"
     >
+    <ImageView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/testImage"/>
    <TextView
        android:layout_height="wrap_content"
        android:layout_width="match_parent"

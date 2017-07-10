@@ -2,6 +2,7 @@ package com.example.android.popularmovies;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -22,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,6 +38,8 @@ import com.example.android.popularmovies.data.QueryUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -48,7 +52,7 @@ import static android.os.Build.VERSION_CODES.M;
 import static java.lang.System.load;
 
 public class MovieDetailActivity extends AppCompatActivity {
-
+    File f1;
     private RecyclerView mRecycler;
 
     private RecyclerView mReviewView;
@@ -72,7 +76,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     //List<String> ab = new ArrayList<>();
     //Intent watchTrailer;
     Button addToFav;
-    String id ;
+    String id;
     List<MovieTrailerDetails> mTrailers;
 
     MovieTrailerDetails trailers;
@@ -83,24 +87,25 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     String cursorName = null;
     String cursorID = null;
-    String cursorVote = null ;
+    String cursorVote = null;
     String cursorOverview = null;
-    String cursorDate = null ;
+    String cursorDate = null;
     //boolean isCon = checkConnection();
-
-   // ListView rootView;
+    File fileDelete;
+    boolean deleteStatus;
+    // ListView rootView;
 
     //LayoutInflater inflater;
 
-    public MovieDetailActivity(){
+    public MovieDetailActivity() {
 
     }
 
 
-
-    public MovieDetailActivity (Context cont){
+    public MovieDetailActivity(Context cont) {
         context = cont;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,24 +113,23 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         context = getApplicationContext();
 
-       // button = (Button) findViewById(R.id.testButton);
+        // button = (Button) findViewById(R.id.testButton);
 
         mRecycler = (RecyclerView) findViewById(R.id.trailerList);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(layoutManager);
         mRecycler.setHasFixedSize(true);
         date = (TextView) findViewById(R.id.date);
         mReviewView = (RecyclerView) findViewById(R.id.reviewsList);
-        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mReviewView.setLayoutManager(layoutManager1);
         mReviewView.setHasFixedSize(true);
-
 
 
         //setSupportActionBar(myToolBar);
         movie_title = (TextView) findViewById(R.id.movie_title_detail);
         example3 = (TextView) findViewById(R.id.example3);
-        example4 =  (TextView) findViewById(R.id.example4);
+        example4 = (TextView) findViewById(R.id.example4);
 
         mTrailers = new ArrayList<>();
         mReviews = new ArrayList<>();
@@ -140,23 +144,21 @@ public class MovieDetailActivity extends AppCompatActivity {
         //rootView  = (ListView) findViewById(R.id.trailerList);
 
 
-
         Intent movieid = getIntent();
         //Log.d("Activity Started",id);
-        if(movieid!=null){
-            if(movieid.hasExtra(Intent.EXTRA_TEXT)){
+        if (movieid != null) {
+            if (movieid.hasExtra(Intent.EXTRA_TEXT)) {
                 id = movieid.getStringExtra(Intent.EXTRA_TEXT);
 
 
             }
         }
-        if(!checkConnection()){
+        if (!checkConnection()) {
             TextView trailersHeading = (TextView) findViewById(R.id.trailersHeading);
             TextView reviewHeading = (TextView) findViewById(R.id.reviewHeading);
 
             trailersHeading.setText("");
             reviewHeading.setText("");
-
 
 
         }
@@ -166,14 +168,15 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
 
-    public class FetchSingleMovie extends AsyncTask<String, Void, SingleMovie>{
+    public class FetchSingleMovie extends AsyncTask<String, Void, SingleMovie> {
         Toast test;
+
         @Override
         protected SingleMovie doInBackground(String... params) {
 
 
-        try{
-                if(checkConnection()) {
+            try {
+                if (checkConnection()) {
 
                     m = QueryUtils.fetchSingle(params[0]);
 
@@ -185,21 +188,23 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 }
 
-            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(id)).build(),
-                   new String[]{"ID"},
-                    String.valueOf(id),
-                    null,
-                    null,
-                    null);
-            mCursor.moveToLast();
-            cursorName = mCursor.getString(1);
-            cursorID = mCursor.getString(0);
-            cursorOverview = mCursor.getString(2);
-            cursorVote = mCursor.getString(3);
-            cursorDate = mCursor.getString(4);
+                mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(id)).build(),
+                        new String[]{"ID"},
+                        String.valueOf(id),
+                        null,
+                        null,
+                        null);
+                mCursor.moveToLast();
+                cursorID = mCursor.getString(mCursor.getColumnIndex("ID"));
+                cursorName = mCursor.getString(mCursor.getColumnIndex("NAME"));
+                cursorOverview = mCursor.getString(mCursor.getColumnIndex("OVERVIEW"));
+                cursorVote = mCursor.getString(mCursor.getColumnIndex("VOTE"));
+                cursorDate = mCursor.getString(mCursor.getColumnIndex("RELEASE_DATE"));
+                image = (ImageView) findViewById(R.id.image_movie);
 
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch(Exception e){e.printStackTrace();}
 
             return m;
         }
@@ -210,30 +215,46 @@ public class MovieDetailActivity extends AppCompatActivity {
             super.onPostExecute(singleMovie);
 
 
-            if(mCursor.getCount()!=0){
+            if (mCursor.getCount() != 0) {
 
                 //Log.d(cursorName+"Cursor Nmae",cursorID);
                 addToFav.setBackgroundColor(Color.RED);
                 addToFav.setText("Remove from Favouites");
 
             }
+            final File[] f2Test = new File[1];
+            f2Test[0] = new File("/data/data/com.example.android.popularmovies/app_PopMov/" + id + ".jpg");
             if (singleMovie != null) {
                 //myToolBar.setTitle(singleMovie.title);
 
-                if(checkConnection()) {
+                if (checkConnection()) {
+                    Log.d(f2Test[0].toString(),String.valueOf(f2Test[0].exists()));
+
                     movie_title.setText(m.title);
                     imgURL = singleMovie.poster;
                     example3.setText("Rating : " + singleMovie.rating);
                     example4.setText(singleMovie.synopsis);
                     date.setText(singleMovie.date);
 
-                    image = (ImageView) findViewById(R.id.image_movie);
+
                     Picasso.with(context)
                             .load(imgURL).resize(320, 470)
                             .into(image);
+                }else{
+
+                                    Log.d(f2Test[0].toString(),String.valueOf(f2Test[0].exists()));
+                                    Picasso.with(context)
+                                            .load(f2Test[0]).resize(320,470)
+                                            .into(image);
+
+
                 }
             }
-
+        if(!checkConnection() && mCursor!=null){
+            Picasso.with(context)
+                    .load(f2Test[0]).resize(320,470)
+                    .into(image);
+        }
 
             if (mTrailers != null) {
                 trailerAdapter.setData(mTrailers);
@@ -242,19 +263,21 @@ public class MovieDetailActivity extends AppCompatActivity {
                 mReviewAdapter.setData(mReviews);
             }
 
-            if(!checkConnection() && mCursor.getCount()!=0){
-               // mCursor.moveToNext();
+            if (!checkConnection() && mCursor.getCount() != 0) {
+                // mCursor.moveToNext();
                 movie_title.setText(cursorName);
                 addToFav.setBackgroundColor(Color.RED);
                 addToFav.setText("Remove from Favouites");
-                date.setText("Release Date : "+cursorDate);
-                example3.setText("Rating : "+cursorVote);
-                example4.setText("Overview : "+cursorOverview);
+                date.setText("Release Date : " + cursorDate);
+                example3.setText("Rating : " + cursorVote);
+                example4.setText("Overview : " + cursorOverview);
             }
-            if(!checkConnection() && mCursor.getCount()==0){
+            if (!checkConnection() && mCursor.getCount() == 0) {
                 addToFav.setVisibility(View.INVISIBLE);
             }
-
+            if (mCursor != null || mCursor.getCount() != 0) {
+                mCursor.moveToLast();
+            }
 
             final String finalCursorID = cursorID;
 
@@ -262,40 +285,62 @@ public class MovieDetailActivity extends AppCompatActivity {
             final String finalCursorOverview = cursorOverview;
             final String finalCursorDate = cursorDate;
             final String finalCursorVote = cursorVote;
+            Log.d(finalCursorDate, finalCursorID + " Check Final");
+
+
+            fileDelete = f2Test[0];
+            deleteStatus = false;
             addToFav.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                        if (mCursor.getCount() != 0) {
-                            Log.d("1","First");
-                            Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(finalCursorID).build();
+                    mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build(),
+                            new String[]{"ID"},
+                            String.valueOf(id),
+                            null,
+                            null,
+                            null);
 
-                            getContentResolver().delete(uriDelete, null, null);
+//                            if(checkConnection()){
+//                                //imageDownload(m.poster,m.id_m,context);
+//
+//
+//                                Log.d(String.valueOf(f2Test[0].exists()),"File Status");
+//                            }
 
-                            addToFav.setBackgroundColor(getResources().getColor(R.color.aquaBanner));
-                            addToFav.setText("Add to Favourites");
-                            //Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
-                            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(finalCursorID).build(),
+                    if (mCursor.getCount() != 0) {
+                        Log.d("1", "First");
+                        Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build();
+
+                        getContentResolver().delete(uriDelete, null, null);
+
+                        addToFav.setBackgroundColor(getResources().getColor(R.color.aquaBanner));
+                        addToFav.setText("Add to Favourites");
+                        //Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+                        mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build(),
+                                new String[]{"ID"},
+                                String.valueOf(id),
+                                null,
+                                null,
+                                null);
+                        deleteStatus = true;
+
+
+                    } else {
+                        Log.d("2", "Second");
+                        if (!checkConnection()) {
+
+                            Log.d("3", "Third");
+                            cv = new ContentValues();
+                            mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(id)).build(),
                                     new String[]{"ID"},
-                                    String.valueOf(finalCursorID),
+                                    String.valueOf(id),
                                     null,
                                     null,
                                     null);
+                            if (mCursor.getCount() == 0) {
 
-
-                        } else {
-                            Log.d("2","Second");
-                            if(!checkConnection()){
-                                Log.d("3","Third");
-                                cv = new ContentValues();
-                                mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(id)).build(),
-                                        new String[]{"ID"},
-                                        String.valueOf(id),
-                                        null,
-                                        null,
-                                        null);
-                                if(mCursor.getCount()==0){
-                                Log.d("Check cursor "+finalCursorID,finalCursorName);
+                                Log.d("Check cursor " + finalCursorID, finalCursorName);
                                 cv.put(MovieContract.MovieEntry.COLUMN_ID, finalCursorID);
                                 cv.put(MovieContract.MovieEntry.COLUMN_NAME, finalCursorName);
 
@@ -308,31 +353,33 @@ public class MovieDetailActivity extends AppCompatActivity {
                                 Log.d("Uri", MovieContract.MovieEntry.FINAL_URI.toString());
                                 Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI, cv);
 
-                        if(uri!=null){
-                            Toast.makeText(context,uri.toString(),Toast.LENGTH_SHORT).show();
-                        }
+//                                if (uri != null) {
+//                                    Toast.makeText(context, uri.toString(), Toast.LENGTH_SHORT).show();
+//                                }
                                 addToFav.setBackgroundColor(Color.RED);
-                                addToFav.setText("Remove from Facourites");}
-                                else{
+                                addToFav.setText("Remove from Facourites");
+                                deleteStatus = false;
+                            } else {
 
-                                    Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(finalCursorID).build();
+                                Uri uriDelete = MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build();
 
-                                    getContentResolver().delete(uriDelete, null, null);
+                                getContentResolver().delete(uriDelete, null, null);
 
-                                    addToFav.setBackgroundColor(getResources().getColor(R.color.aquaBanner));
-                                    addToFav.setText("Add to Favourites");
-                                    //Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
-                                    mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(finalCursorID).build(),
-                                            new String[]{"ID"},
-                                            String.valueOf(finalCursorID),
-                                            null,
-                                            null,
-                                            null);
+                                addToFav.setBackgroundColor(getResources().getColor(R.color.aquaBanner));
+                                addToFav.setText("Add to Favourites");
+                                //Toast.makeText(context,"Deleted",Toast.LENGTH_SHORT).show();
+                                mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build(),
+                                        new String[]{"ID"},
+                                        String.valueOf(id),
+                                        null,
+                                        null,
+                                        null);
+                                deleteStatus = true;
 
-                                }
+                            }
 
-                            }else{
-                                Log.d("4","Fourth");
+                        } else {
+                            Log.d("4", "Fourth");
                             cv = new ContentValues();
                             cv.put(MovieContract.MovieEntry.COLUMN_ID, singleMovie.id_m);
                             cv.put(MovieContract.MovieEntry.COLUMN_NAME, singleMovie.title);
@@ -350,33 +397,91 @@ public class MovieDetailActivity extends AppCompatActivity {
 //                        }
                             addToFav.setBackgroundColor(Color.RED);
                             addToFav.setText("Remove from Facourites");
-
+                            imageDownload(m.poster,m.id_m,context);
                             mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
                                     new String[]{"ID"},
                                     String.valueOf(m.id_m),
                                     null,
                                     null,
                                     null);
+                            deleteStatus = false;
+                                //finalCursorID = m.id_m;
+
 
                         }
-                        }
-
                     }
 
-                });
+                }
 
+            });
 
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        mCursor.close();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id_return = item.getItemId();
+        if(id_return == android.R.id.home ){
+            if(deleteStatus == true && fileDelete.exists()){
+                fileDelete.delete();
+            }
+        mCursor.close();
         }
-    public boolean checkConnection(){
+        return super.onOptionsItemSelected(item);
+    }
+
+    public boolean checkConnection() {
         ConnectivityManager cm =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         return isConnected;
     }
+
+    public void imageDownload(String url, final String name, final Context con) {
+
+        Picasso.with(con).load(url).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                ContextWrapper cw = new ContextWrapper(con);
+                File dir = cw.getDir("PopMov", Context.MODE_PRIVATE);
+
+                f1 = new File(dir, name + ".jpg");
+                Log.d(f1.toString(), "Check Dir");
+                try {
+                    FileOutputStream fileOutputStream = new FileOutputStream(f1);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        });
     }
+
+}
 

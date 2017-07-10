@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/c88554b592a741e87861732ac9c90a9caa93f6be/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_73110e7fbcdd4e41c399346293ea54752b278221/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/e7690bc0b41dcec518bf14a659e71385478d636c/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_1b7fdac0a7927ca2cbb837f7bf2d2aaec36d6c67.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/31a3b7c2b5a0cf94280ebc66f6e172535df262f8/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8fe8a8f77d651982ce5e18f6187dc4daf914ac57">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_a8ac0135c1d7c7116ac65ba8ba98bc29ba574dfd/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/f1e6bb36882b3820a65d14777fee033f52e5e1b6/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="810f41e5b7fd99f196ebeabe865ba2c54e7e76dc">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_80621802e38e050e571536821aa898722c8c1dd4/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.2.0/support-annotations-25.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4a5a82a027706397fff621b22fd6fa796e91d7c5">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/support-annotations-25.2.0_46dd0d394b257995daf6df284e0390895bc6a77f.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/f5e2b04a8255daaae687e98a2c91127b129e77d5/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e820b7be8c035dd522da4bc822e8a76c8e27921a">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0eb49b833bbf1f08b90a4bfd5a40e4a038e3bfee/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.gradle/caches/modules-2/files-2.1/com.squareup.picasso/picasso/2.5.2/7446d06ec8d4f7ffcc53f1da37c95f200dcb9387/picasso-2.5.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/picasso-2.5.2_cfcf93931c664165bf575c035504f05dc1bff522/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/a27b11746bdbda83aabb3c7faf3461cf936e9e35/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="cb454b52545859ed2f24a6c01366805b0fa04b22">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_8e10eeae2600669cced55ea32b715259e770dda1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/03da5d8ebdd388028975a90f694615f32b1449e3/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_a94ffc4f8542edc1779bda54c8697b11509af269.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/d0c330c4b527221b5e0a7bd3adf1702d772ecf70/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_60a57e174bea0f9c004dd1dd5928bb8c023bb07b/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/de0278fdada7b37c7d2fe850806e6ad27ad55650/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_3735ea25155f99dc83d47f8786e8aef1bca3dbb1/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/5a4e5a236f39397a9d8fb94e229deb5b25e06be9/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="e820b7be8c035dd522da4bc822e8a76c8e27921a">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_5c2043dffefdfdf4e0516ffb704c26409e610df3.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/82ecbc064c92cf3e0a4538ef86fd0c6078b8e88b/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="152de8da301561dcb0946471697a420d8f7a68c5">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_9233109484eb1b59c85039a3c71150df7e9ba103/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/a964f5104421a0b459861b22b5cdbb98802a2947/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_8c111a59e9b987bcb229980fbb63506e59206379/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/7b48ca03c1e7b623ac41e0eed27c20636fc1b5a3/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="67eb33110dbacb46a48175b08ae0c96761d2c17d">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_c418a7212bd38e9c1a6347b2671618a2463d82cf.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/Library/Android/sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_756e7afc0b3eb7f3b82ac0ff0f94d6dad7d298f5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/ea176c511ee32b95cfc18d0c1ea2459a1098978b/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="ee394a892dd21c03a528139c1e8d4e0e1264ac84">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_338b4577d667ca38e76c43818cb5ce4c64fa78f2.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/e34f1e165a137a12d32fa1749aa25703d4f7a383/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="fa0446a14ed5dd3725047d6399ffea771a564b30">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_0a0e23cfe256f3e03c66e814786b9c2efb32d166/classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="c82741bc129dd5f99f11a4ab8666ae24262053b6">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_e73ffb01208fb39aa156786225fff836b73b4fce/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/e486f7d3419b6bb73f815eeef1e3c56a3c08bef7/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_9c9f994a3b04defb159beff6558a742bb8b2f988.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/4898409ba6995c8c83677be265d238adba8b9364/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="810f41e5b7fd99f196ebeabe865ba2c54e7e76dc">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_0f1851e7bcb4f51fcd8c6aafbea4a4f35c7e21dc.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="88b95d6edb8b28e87f83e4be72f57bcfd95e6845">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_d792aa9baa5767439bb6cd8f456adf915c144cd0/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/bc7ced4495a4c4d7bcf2dec561cf07891ab3d2d0/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_c6377b17e7fd95623f05acb1c95a2136606357a2.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/ravikiranpathade/.android/build-cache/3e062660b77af36d5ec35e34fad57972c8ea0890/output/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="702d339bc0a81d21354cd7e2cf2b67225fa4a16c">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/transforms/dex/debug/folders/1000/10/classes_41b0b5b61c81adcca1489ec2d4a9c2e61cc49c3c/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/2540f05807cd03e3736949f2da1b39cb85b034ab/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="8fe8a8f77d651982ce5e18f6187dc4daf914ac57">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_298cbb3207aba4ded48109deaf47cf0ff1f8b6ca.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/ravikiranpathade/.android/build-cache/317a69b3d8907b75499a899eb5b6b97ffd3ab9b6/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.2"
+        sha1="152de8da301561dcb0946471697a420d8f7a68c5">
+        <dex dex="/Users/ravikiranpathade/Desktop/Git_Projects/PopularMovies/app/build/intermediates/pre-dexed/debug/classes_495e935c5bc5791e732d617ad67fbd2d0cf315ed.jar" />
+    </item>
+
+</items>
