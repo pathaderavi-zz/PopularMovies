@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +51,9 @@ import static android.R.attr.title;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.os.Build.VERSION_CODES.M;
+import static com.example.android.popularmovies.R.id.empty_view;
+import static com.example.android.popularmovies.R.id.reviewHeading;
+import static com.example.android.popularmovies.R.id.trailersHeading;
 import static com.example.android.popularmovies.R.id.viewGroup;
 import static java.lang.System.load;
 
@@ -95,6 +99,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     //boolean isCon = checkConnection();
     File fileDelete;
     boolean deleteStatus;
+    TextView trailersHeading;
+    TextView reviewHeading;
     // ListView rootView;
 
     //LayoutInflater inflater;
@@ -144,7 +150,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         mReviewView.setAdapter(mReviewAdapter);
         addToFav = (Button) findViewById(R.id.saveFavourite);
         //rootView  = (ListView) findViewById(R.id.trailerList);
-
+        //
+        trailersHeading = (TextView) findViewById(R.id.trailersHeading);
+       reviewHeading = (TextView) findViewById(R.id.reviewHeading);
 
         Intent movieid = getIntent();
         //Log.d("Activity Started",id);
@@ -161,17 +169,22 @@ public class MovieDetailActivity extends AppCompatActivity {
                 null,
                 null,
                 null);
+
         if (!checkConnection()) {
-            TextView trailersHeading = (TextView) findViewById(R.id.trailersHeading);
-            TextView reviewHeading = (TextView) findViewById(R.id.reviewHeading);
+
 
             trailersHeading.setText("");
             reviewHeading.setText("");
             Log.d("Check","Connection"+String.valueOf(mCursor.getCount()));
         if(mCursor.getCount()==0){
             Log.d("Check","Cursor");
-            ViewGroup viewGroup = (ViewGroup) findViewById(R.id.viewGroup);
-            viewGroup.setVisibility(View.INVISIBLE);
+//            ViewGroup viewGroup = (ViewGroup) findViewById(R.id.viewGroup);
+//            viewGroup.setVisibility(View.INVISIBLE);
+            LinearLayout l = (LinearLayout) findViewById(R.id.wholeLayout);
+            l.setVisibility(View.GONE);
+            TextView textView = (TextView) findViewById(R.id.empty_view);
+            textView.setVisibility(View.VISIBLE);
+
         }
 
         }//else if(mCursor!=null) {
@@ -429,14 +442,20 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             });
 
-
-        }
+            if(mTrailers.isEmpty()){
+                trailersHeading.setVisibility(View.GONE);
+            }
+            if(mReviews.isEmpty()){
+                reviewHeading.setVisibility(View.GONE);
+            }}
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
+        if(fileDelete.exists() && deleteStatus==true){
+            fileDelete.delete();
+        }
         mCursor.close();
 
     }
@@ -454,6 +473,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     public boolean checkConnection() {
+
         ConnectivityManager cm =
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
