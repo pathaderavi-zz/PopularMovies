@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import static android.R.attr.title;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 import static android.os.Build.VERSION_CODES.M;
+import static com.example.android.popularmovies.R.id.viewGroup;
 import static java.lang.System.load;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -114,7 +116,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         context = getApplicationContext();
 
         // button = (Button) findViewById(R.id.testButton);
-
+        image = (ImageView) findViewById(R.id.image_movie);
         mRecycler = (RecyclerView) findViewById(R.id.trailerList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mRecycler.setLayoutManager(layoutManager);
@@ -153,17 +155,29 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             }
         }
+        mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build(),
+                new String[]{"ID"},
+                String.valueOf(id),
+                null,
+                null,
+                null);
         if (!checkConnection()) {
             TextView trailersHeading = (TextView) findViewById(R.id.trailersHeading);
             TextView reviewHeading = (TextView) findViewById(R.id.reviewHeading);
 
             trailersHeading.setText("");
             reviewHeading.setText("");
-
-
+            Log.d("Check","Connection"+String.valueOf(mCursor.getCount()));
+        if(mCursor.getCount()==0){
+            Log.d("Check","Cursor");
+            ViewGroup viewGroup = (ViewGroup) findViewById(R.id.viewGroup);
+            viewGroup.setVisibility(View.INVISIBLE);
         }
-        new FetchSingleMovie().execute(id);
 
+        }//else if(mCursor!=null) {
+          //  Log.d("Check","Fetch");
+            new FetchSingleMovie().execute(id);
+        //}
 
     }
 
@@ -200,7 +214,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 cursorOverview = mCursor.getString(mCursor.getColumnIndex("OVERVIEW"));
                 cursorVote = mCursor.getString(mCursor.getColumnIndex("VOTE"));
                 cursorDate = mCursor.getString(mCursor.getColumnIndex("RELEASE_DATE"));
-                image = (ImageView) findViewById(R.id.image_movie);
+
 
             } catch (Exception e) {
                 e.printStackTrace();
