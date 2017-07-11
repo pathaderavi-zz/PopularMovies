@@ -11,4 +11,14 @@
         android:orderInCategory="2"
         app:showAsAction="never"
         />
+    <item android:id="@+id/action_show_fav"
+        android:title="@string/show_fav"
+        android:orderInCategory="3"
+        app:showAsAction="never"
+        />
+    <item android:id="@+id/action_show_all"
+        android:title="@string/show_all"
+        android:orderInCategory="4"
+        app:showAsAction="never"
+        />
 </menu>

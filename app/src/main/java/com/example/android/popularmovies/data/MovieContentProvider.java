@@ -55,11 +55,11 @@ public class MovieContentProvider extends ContentProvider {
 
         //uri = Uri.parse(uri.toString()+"/#");
         final SQLiteDatabase db = movieDBHelper.getReadableDatabase();
-        selectionArgs = new String[]{"ID=?"};
+
         //uri.buildUpon().appendPath("ID").build();
         int match = sUrimatcher.match(uri);
 
-        Log.d(uri.toString(),selection);
+//        Log.d(uri.toString(),selection);
 
 
 
@@ -67,7 +67,7 @@ public class MovieContentProvider extends ContentProvider {
 
         switch(match){
             case MOVIES_ID:{
-
+                selectionArgs = new String[]{"ID=?"};
                 retCusor = db.query(MovieContract.MovieEntry.TABLE_NAME,
                         null,
                         "ID=?",
@@ -79,7 +79,16 @@ public class MovieContentProvider extends ContentProvider {
                 break;
             }
             //TODO
-            case MOVIES:
+            case MOVIES: {
+                retCusor = db.query(MovieContract.MovieEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        null);
+                break;
+            }
 
                 default:
                     throw new UnsupportedOperationException("Unable to find "+uri);

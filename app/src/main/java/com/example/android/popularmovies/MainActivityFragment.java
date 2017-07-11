@@ -5,6 +5,7 @@ package com.example.android.popularmovies;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -24,12 +25,17 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.android.popularmovies.data.MovieContract;
 import com.example.android.popularmovies.data.QueryUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.id;
+import static android.R.attr.menuCategory;
+import static android.R.attr.name;
 import static android.widget.Toast.makeText;
+import static com.example.android.popularmovies.R.string.sortby;
 
 
 /**
@@ -46,7 +52,7 @@ public class MainActivityFragment extends Fragment  {
 
 
     Activity test;
-
+    Cursor mFavourites;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,7 +62,7 @@ public class MainActivityFragment extends Fragment  {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    String sortby;
 
     public MainActivityFragment() {
         // Required empty public constructor
@@ -112,7 +118,7 @@ public class MainActivityFragment extends Fragment  {
     }
 
 
-
+    //MovieDetailActivity mm = new MovieDetailActivity();
 
     public class FetchMovies extends AsyncTask<String, Void, List<Movie>>{
 
@@ -120,15 +126,45 @@ public class MainActivityFragment extends Fragment  {
         @Override
         protected List doInBackground(String... params) {
             List<Movie> newList = new ArrayList<>();
+            List<Movie> newListCursor = new ArrayList<>();
             String q = params[0];
+            boolean isCon = checkConnection();
 
-            try{
-                newList = QueryUtils.fetchMovies(q);
-                return newList;
+            try{    if(isCon){
+                    newList = QueryUtils.fetchMovies(q);}
+                else{
+
+//                MovieDetailActivity mm = new MovieDetailActivity();
+//                Log.d(String.valueOf(mm.checkConnection()),"COn Stat");
+                Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null);
+
+                while(m1.moveToNext()){
+                    String id_c = m1.getString(m1.getColumnIndex("ID"));
+                    String name_c = m1.getString(m1.getColumnIndex("NAME"));
+                    Log.d(id_c,name_c+" Here Log");
+                 newList.add(new Movie(id_c,id_c,id_c));
+                }
+                }
+//
+
+//                if(mm.checkConnection()){
+//                    Log.d(String.valueOf(newListCursor.size()),"Check Cursor");
+
+
+
+//                }
+//                else {
+//
+//                    return newListCursor;
+//                }
 
             }
             catch(Exception e){e.printStackTrace();}
-
             return newList;
         }
         Toast toast = null;
@@ -174,15 +210,16 @@ public class MainActivityFragment extends Fragment  {
         int menuItem = item.getItemId();
 
         if(menuItem == R.id.action_sort){
-            String sortby = "top_rated";
+            sortby = "top_rated";
             new FetchMovies().execute(sortby);
         }
         if(menuItem == R.id.action_sort_pop){
-            String sortby = "popular";
+            sortby = "popular";
             new FetchMovies().execute(sortby);
 
 
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -191,5 +228,15 @@ public class MainActivityFragment extends Fragment  {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.sort,menu);
 
+    }
+    public boolean checkConnection() {
+
+        ConnectivityManager cm =
+                (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
     }
 }

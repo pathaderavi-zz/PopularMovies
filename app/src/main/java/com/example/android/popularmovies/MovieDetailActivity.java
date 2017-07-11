@@ -98,7 +98,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     String cursorDate = null;
     //boolean isCon = checkConnection();
     File fileDelete;
-    boolean deleteStatus;
+    boolean deleteStatus = false;
     TextView trailersHeading;
     TextView reviewHeading;
     // ListView rootView;
@@ -493,12 +493,13 @@ public class MovieDetailActivity extends AppCompatActivity {
                 File dir = cw.getDir("PopMov", Context.MODE_PRIVATE);
 
                 f1 = new File(dir, name + ".jpg");
-                Log.d(f1.toString(), "Check Dir");
+
                 try {
                     FileOutputStream fileOutputStream = new FileOutputStream(f1);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.flush();
                     fileOutputStream.close();
+                    Log.d(String.valueOf(f1.exists()), "Check Dir");
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -516,6 +517,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }
 

@@ -3,4 +3,6 @@
     <string name="sort">Sort by Ratings</string>
     <string name="sort_pop">Sort by Popularity</string>
     <string name="sortby">popularity.asc</string>
+    <string name="show_fav">Show Favourites</string>
+    <string name="show_all">Show All</string>
 </resources>
