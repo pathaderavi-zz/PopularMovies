@@ -4,11 +4,13 @@ import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -60,7 +62,8 @@ public class MovieContentProvider extends ContentProvider {
 
 //        Log.d(uri.toString(),selection);
 
-
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        //sortOrder = pref.getString("sort_by_c","");
         Cursor retCusor;
 
         switch (match) {
@@ -84,7 +87,7 @@ public class MovieContentProvider extends ContentProvider {
                         selectionArgs,
                         null,
                         null,
-                        null);
+                        sortOrder);
                 break;
             }
 

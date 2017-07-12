@@ -4,11 +4,13 @@ package com.example.android.popularmovies;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -47,8 +49,8 @@ public class MainActivityFragment extends Fragment {
     private MovieAdapter mAdapter;
     private GridView gView;
     private ImageView imgView;
-
-
+    String sby;
+    boolean showFav = false;
     Activity test;
     Cursor mFavourites;
 
@@ -61,7 +63,8 @@ public class MainActivityFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     String sortby;
-
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
     public MainActivityFragment() {
         // Required empty public constructor
     }
@@ -88,13 +91,19 @@ public class MainActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        sortby = "popular";
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        editor = sharedPreferences.edit();
+        editor.putString("sort_by_i",sortby);
+        editor.putString("sort_by_c","POPULARITY ASC");
+        editor.putBoolean("showFav",false);
+        editor.apply();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
-        new FetchMovies().execute("popular");
+        new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
 
 
     }
@@ -117,7 +126,7 @@ public class MainActivityFragment extends Fragment {
     }
 
 
-    //MovieDetailActivity mm = new MovieDetailActivity();
+
 
     public class FetchMovies extends AsyncTask<String, Void, List<Movie>> {
 
@@ -128,20 +137,20 @@ public class MainActivityFragment extends Fragment {
             List<Movie> newListCursor = new ArrayList<>();
             String q = params[0];
             boolean isCon = checkConnection();
+            sby = sharedPreferences.getString("sort_by_c","");
 
             try {
-                if (isCon) {
+                if (isCon && !showFav) {
                     newList = QueryUtils.fetchMovies(q);
                 } else {
-
+                    Log.d(" Else "," Loop ");
 //                MovieDetailActivity mm = new MovieDetailActivity();
 //                Log.d(String.valueOf(mm.checkConnection()),"COn Stat");
                     Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
                             null,
                             null,
                             null,
-                            null,
-                            null);
+                            sby);
 
                     while (m1.moveToNext()) {
                         String id_c = m1.getString(m1.getColumnIndex("ID"));
@@ -150,21 +159,12 @@ public class MainActivityFragment extends Fragment {
                         newList.add(new Movie(id_c, id_c, id_c));
                     }
                 }
-//
 
-//                if(mm.checkConnection()){
-//                    Log.d(String.valueOf(newListCursor.size()),"Check Cursor");
-
-
-//                }
-//                else {
-//
-//                    return newListCursor;
-//                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            Log.d(" Count ", String.valueOf(newList.size()) );
             return newList;
         }
 
@@ -213,13 +213,30 @@ public class MainActivityFragment extends Fragment {
 
         if (menuItem == R.id.action_sort) {
             sortby = "top_rated";
+            editor.putString("sort_by_c","VOTE DESC");
+            editor.apply();
             new FetchMovies().execute(sortby);
         }
         if (menuItem == R.id.action_sort_pop) {
             sortby = "popular";
+            editor.putString("sort_by_c","POPULARITY DESC");
+            editor.apply();
             new FetchMovies().execute(sortby);
 
 
+        }
+        if(menuItem==R.id.action_show_fav){
+            showFav = true;
+            editor.putBoolean("showFav",true);
+            editor.apply();
+            new FetchMovies().execute(sortby);
+
+        }
+        if(menuItem==R.id.action_show_all){
+            showFav = false;
+            editor.putBoolean("showFav",false);
+            editor.apply();
+            new FetchMovies().execute(sortby);
         }
 
         return super.onOptionsItemSelected(item);

@@ -1,10 +1,12 @@
 package com.example.android.popularmovies;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -47,26 +49,28 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         }
 
         ImageView id = (ImageView) convertView.findViewById(R.id.image_poster);
-
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        String sortO = sharedPreferences.getString("sort_by_c","");
         Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
                 null,
                 null,
                 null,
-                null,
-                null);
+                sortO);
         String filename;
-        if (m1 != null && m1.moveToPosition(position) && !checkConnection()) {
+        boolean showFav = sharedPreferences.getBoolean("showFav",false);
+        Log.d(" Boolean ", String.valueOf(showFav));
+        if (m1 != null && m1.moveToPosition(position) && showFav) {
 
             String id_cursor = m1.getString(m1.getColumnIndex("ID"));
             filename = m1.getString(m1.getColumnIndex("ID"));
             imageFile = new File("/data/data/com.example.android.popularmovies/app_PopMov/" + filename + ".jpg");
             Log.d(String.valueOf(imageFile.exists()), " File Status " + m1.getString(m1.getColumnIndex("NAME")));
-            Log.d(imageFile.toString(), " Image name");
+            Log.d(imageFile.toString(), sortO);
             Picasso.with(getContext()).load(imageFile).into(id);
             //Log.d(m1.getString(m1.getColumnIndex("ID")), "Check Cursor ID through Movie Adapter ");
         }
 
-        if (checkConnection()) {
+        if (checkConnection() && !showFav) {
             Picasso.with(getContext()).load(m.id).into(id);
         }
 
