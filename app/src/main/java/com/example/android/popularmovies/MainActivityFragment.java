@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.android.popularmovies.data.MovieContract;
@@ -52,7 +53,11 @@ public class MainActivityFragment extends Fragment {
     String sby;
     boolean showFav = false;
     Activity test;
-    Cursor mFavourites;
+    private ProgressBar spinnerLoading;
+    //Cursor mFavourites;
+//    String title = "Popular Movies ";
+//    String action1 = "All";
+//    String action2 = " Most Popular";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,11 +96,18 @@ public class MainActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        sortby = "popular";
+
+
+       // ((MainActivityFragment) getActivity()).getActionBar().setTitle(action1+action2);
+
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        //Log.d(" Pref Stat ",sharedPreferences.getString("sort_by_i",""));
         editor = sharedPreferences.edit();
-        editor.putString("sort_by_i",sortby);
-        editor.putString("sort_by_c","POPULARITY ASC");
+        if(sharedPreferences.getString("sort_by_i","").equals("")){
+                    sortby = "popular";
+                    editor.putString("sort_by_i",sortby);
+        }
+        editor.putString("sort_by_c","POPULARITY DESC");
         editor.putBoolean("showFav",false);
         editor.apply();
         if (getArguments() != null) {
@@ -114,7 +126,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        //spinnerLoading = (ProgressBar) rootView.findViewById(R.id.progressBar1);
         rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
         gView = (GridView) rootView.findViewById(R.id.fragment_movie);
         //imgView = (ImageView) rootView.findViewById(R.id.image_poster);
@@ -130,20 +142,31 @@ public class MainActivityFragment extends Fragment {
 
     public class FetchMovies extends AsyncTask<String, Void, List<Movie>> {
 
+        @Override
+        protected void onPreExecute() {
+
+            super.onPreExecute();
+            //spinnerLoading.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected List doInBackground(String... params) {
+
+
+
             List<Movie> newList = new ArrayList<>();
             List<Movie> newListCursor = new ArrayList<>();
             String q = params[0];
             boolean isCon = checkConnection();
             sby = sharedPreferences.getString("sort_by_c","");
-
+            if(!checkConnection()){
+                showFav=true;
+            }
             try {
                 if (isCon && !showFav) {
                     newList = QueryUtils.fetchMovies(q);
                 } else {
-                    Log.d(" Else "," Loop ");
+                    //Log.d(" Else "," Loop ");
 //                MovieDetailActivity mm = new MovieDetailActivity();
 //                Log.d(String.valueOf(mm.checkConnection()),"COn Stat");
                     Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
@@ -173,7 +196,8 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(final List<Movie> movies) {
             super.onPostExecute(movies);
-
+            //((MainActivity) getActivity()).setTitle(title+action1+action2);
+            //spinnerLoading.setVisibility(View.VISIBLE);
             if (movies != null) {
                 //movies = new ArrayList<Movie>();
                 mAdapter = new MovieAdapter(getContext(), movies);
@@ -214,14 +238,17 @@ public class MainActivityFragment extends Fragment {
         if (menuItem == R.id.action_sort) {
             sortby = "top_rated";
             editor.putString("sort_by_c","VOTE DESC");
+            editor.putString("sort_by_i",sortby);
             editor.apply();
-            new FetchMovies().execute(sortby);
+            //action2=" Top Rated";
+            new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
         }
         if (menuItem == R.id.action_sort_pop) {
             sortby = "popular";
             editor.putString("sort_by_c","POPULARITY DESC");
+            editor.putString("sort_by_i",sortby);
             editor.apply();
-            new FetchMovies().execute(sortby);
+            new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
 
 
         }
@@ -229,14 +256,14 @@ public class MainActivityFragment extends Fragment {
             showFav = true;
             editor.putBoolean("showFav",true);
             editor.apply();
-            new FetchMovies().execute(sortby);
+            new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
 
         }
         if(menuItem==R.id.action_show_all){
             showFav = false;
             editor.putBoolean("showFav",false);
             editor.apply();
-            new FetchMovies().execute(sortby);
+            new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
         }
 
         return super.onOptionsItemSelected(item);

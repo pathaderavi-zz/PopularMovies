@@ -58,7 +58,9 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
                 sortO);
         String filename;
         boolean showFav = sharedPreferences.getBoolean("showFav",false);
-        Log.d(" Boolean ", String.valueOf(showFav));
+        if(!checkConnection()){
+            showFav=true;
+        }
         if (m1 != null && m1.moveToPosition(position) && showFav) {
 
             String id_cursor = m1.getString(m1.getColumnIndex("ID"));

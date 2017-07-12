@@ -9,5 +9,10 @@
     tools:context="com.example.android.popularmovies.MainActivity"
     tools:layout="@layout/fragment_main_activity"
     >
+   <!-- <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:id="@+id/progBarMain"
+        android:progressDrawable="@drawable/circular_progress_bar"/>
+-->
 
 </fragment>

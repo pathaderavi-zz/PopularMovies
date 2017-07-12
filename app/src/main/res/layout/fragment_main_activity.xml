@@ -8,8 +8,9 @@
     android:verticalSpacing="0dp"
     android:horizontalSpacing="0dp"
     android:stretchMode="columnWidth"
-    android:id="@+id/fragment_movie">
-
+    android:id="@+id/fragment_movie"
+    >
 
 </GridView>
+
 
