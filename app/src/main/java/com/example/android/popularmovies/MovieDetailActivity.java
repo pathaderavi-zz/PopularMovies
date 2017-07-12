@@ -63,10 +63,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private RecyclerView mReviewView;
     ReviewAdapter mReviewAdapter;
-    //ReviewDetails mReviewDetails;
 
-    //private static String id;
-    //private TextView example;
     private ImageView image;
     private TextView movie_title;
 
@@ -79,8 +76,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     ContentValues cv;
     Toast toast;
     Context context;
-    //List<String> ab = new ArrayList<>();
-    //Intent watchTrailer;
+
     Button addToFav;
     String id;
     List<MovieTrailerDetails> mTrailers;
@@ -93,17 +89,17 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     String cursorName = null;
     String cursorID = null;
-    String cursorVote = null;
+    double cursorVote = 0;
     String cursorOverview = null;
     String cursorDate = null;
-    //boolean isCon = checkConnection();
+    double cursorPop = 0;
+
     File fileDelete;
     boolean deleteStatus = false;
     TextView trailersHeading;
     TextView reviewHeading;
-    // ListView rootView;
 
-    //LayoutInflater inflater;
+
 
     public MovieDetailActivity() {
 
@@ -152,7 +148,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         //rootView  = (ListView) findViewById(R.id.trailerList);
         //
         trailersHeading = (TextView) findViewById(R.id.trailersHeading);
-       reviewHeading = (TextView) findViewById(R.id.reviewHeading);
+        reviewHeading = (TextView) findViewById(R.id.reviewHeading);
 
         Intent movieid = getIntent();
         //Log.d("Activity Started",id);
@@ -163,6 +159,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             }
         }
+        Log.d(" First Check ID" , String.valueOf(id));
         mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(id).build(),
                 new String[]{"ID"},
                 String.valueOf(id),
@@ -175,21 +172,21 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             trailersHeading.setText("");
             reviewHeading.setText("");
-            Log.d("Check","Connection"+String.valueOf(mCursor.getCount()));
-        if(mCursor.getCount()==0){
-            Log.d("Check","Cursor");
+            Log.d("Check", "Connection" + String.valueOf(mCursor.getCount()));
+            if (mCursor.getCount() == 0) {
+                Log.d("Check", "Cursor");
 //            ViewGroup viewGroup = (ViewGroup) findViewById(R.id.viewGroup);
 //            viewGroup.setVisibility(View.INVISIBLE);
-            LinearLayout l = (LinearLayout) findViewById(R.id.wholeLayout);
-            l.setVisibility(View.GONE);
-            TextView textView = (TextView) findViewById(R.id.empty_view);
-            textView.setVisibility(View.VISIBLE);
+                LinearLayout l = (LinearLayout) findViewById(R.id.wholeLayout);
+                l.setVisibility(View.GONE);
+                TextView textView = (TextView) findViewById(R.id.empty_view);
+                textView.setVisibility(View.VISIBLE);
 
-        }
+            }
 
         }//else if(mCursor!=null) {
-          //  Log.d("Check","Fetch");
-            new FetchSingleMovie().execute(id);
+        //  Log.d("Check","Fetch");
+        new FetchSingleMovie().execute(id);
         //}
 
     }
@@ -213,6 +210,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                     mReviews = QueryUtils.getReviews(id);
 
 
+
                 }
 
                 mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(id)).build(),
@@ -221,13 +219,15 @@ public class MovieDetailActivity extends AppCompatActivity {
                         null,
                         null,
                         null);
-                mCursor.moveToLast();
+
+                mCursor.moveToPosition(0);
                 cursorID = mCursor.getString(mCursor.getColumnIndex("ID"));
                 cursorName = mCursor.getString(mCursor.getColumnIndex("NAME"));
                 cursorOverview = mCursor.getString(mCursor.getColumnIndex("OVERVIEW"));
-                cursorVote = mCursor.getString(mCursor.getColumnIndex("VOTE"));
+                cursorVote = mCursor.getDouble(mCursor.getColumnIndex("VOTE"));
                 cursorDate = mCursor.getString(mCursor.getColumnIndex("RELEASE_DATE"));
-
+                cursorPop = mCursor.getDouble(mCursor.getColumnIndex("POPULARITY"));
+                Log.d(String.valueOf(mCursor.getString(mCursor.getColumnIndex("POPULARITY"))), cursorName + " Check Final Double");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -255,7 +255,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 //myToolBar.setTitle(singleMovie.title);
 
                 if (checkConnection()) {
-                    Log.d(f2Test[0].toString(),String.valueOf(f2Test[0].exists()));
+                    Log.d(f2Test[0].toString(), String.valueOf(f2Test[0].exists()));
 
                     movie_title.setText(m.title);
                     imgURL = singleMovie.poster;
@@ -267,21 +267,21 @@ public class MovieDetailActivity extends AppCompatActivity {
                     Picasso.with(context)
                             .load(imgURL).resize(320, 470)
                             .into(image);
-                }else{
+                } else {
 
-                                    Log.d(f2Test[0].toString(),String.valueOf(f2Test[0].exists()));
-                                    Picasso.with(context)
-                                            .load(f2Test[0]).resize(320,470)
-                                            .into(image);
+                    Log.d(f2Test[0].toString(), String.valueOf(f2Test[0].exists()));
+                    Picasso.with(context)
+                            .load(f2Test[0]).resize(320, 470)
+                            .into(image);
 
 
                 }
             }
-        if(!checkConnection() && mCursor!=null){
-            Picasso.with(context)
-                    .load(f2Test[0]).resize(320,470)
-                    .into(image);
-        }
+            if (!checkConnection() && mCursor != null) {
+                Picasso.with(context)
+                        .load(f2Test[0]).resize(320, 470)
+                        .into(image);
+            }
 
             if (mTrailers != null) {
                 trailerAdapter.setData(mTrailers);
@@ -311,8 +311,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             final String finalCursorName = cursorName;
             final String finalCursorOverview = cursorOverview;
             final String finalCursorDate = cursorDate;
-            final String finalCursorVote = cursorVote;
-            Log.d(finalCursorDate, finalCursorID + " Check Final");
+            final double finalCursorVote = cursorVote;
+            final double finalCursorPop = cursorPop;
+
 
 
             fileDelete = f2Test[0];
@@ -376,7 +377,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                                 cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, finalCursorDate);
 
                                 cv.put(MovieContract.MovieEntry.COLUMN_VOTE, finalCursorVote);
-
+                                cv.put(MovieContract.MovieEntry.COLUMN_POPULARITY,finalCursorPop);
+                                //TODO
                                 Log.d("Uri", MovieContract.MovieEntry.FINAL_URI.toString());
                                 Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI, cv);
 
@@ -416,7 +418,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                             cv.put(MovieContract.MovieEntry.COLUMN_RELEASE_DATE, singleMovie.date);
 
                             cv.put(MovieContract.MovieEntry.COLUMN_VOTE, singleMovie.rating);
-
+                            cv.put(MovieContract.MovieEntry.COLUMN_POPULARITY,singleMovie.popular);
+                            //TODO
                             Log.d("Uri", MovieContract.MovieEntry.FINAL_URI.toString());
                             Uri uri = getContentResolver().insert(MovieContract.MovieEntry.FINAL_URI, cv);
 //                        if(uri!=null){
@@ -424,7 +427,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 //                        }
                             addToFav.setBackgroundColor(Color.RED);
                             addToFav.setText("Remove from Facourites");
-                            imageDownload(m.poster,m.id_m,context);
+                            imageDownload(m.poster, m.id_m, context);
                             mCursor = getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().appendPath(String.valueOf(m.id_m)).build(),
                                     new String[]{"ID"},
                                     String.valueOf(m.id_m),
@@ -432,7 +435,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                                     null,
                                     null);
                             deleteStatus = false;
-                                //finalCursorID = m.id_m;
+                            //finalCursorID = m.id_m;
 
 
                         }
@@ -442,18 +445,19 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             });
 
-            if(mTrailers.isEmpty()){
+            if (mTrailers.isEmpty()) {
                 trailersHeading.setVisibility(View.GONE);
             }
-            if(mReviews.isEmpty()){
+            if (mReviews.isEmpty()) {
                 reviewHeading.setVisibility(View.GONE);
-            }}
+            }
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if(fileDelete.exists() && deleteStatus==true){
+        if (fileDelete.exists() && deleteStatus == true) {
             fileDelete.delete();
         }
         mCursor.close();
@@ -463,11 +467,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id_return = item.getItemId();
-        if(id_return == android.R.id.home ){
-            if(deleteStatus == true && fileDelete.exists()){
+        if (id_return == android.R.id.home) {
+            if (deleteStatus == true && fileDelete.exists()) {
                 fileDelete.delete();
             }
-        mCursor.close();
+            mCursor.close();
         }
         return super.onOptionsItemSelected(item);
     }

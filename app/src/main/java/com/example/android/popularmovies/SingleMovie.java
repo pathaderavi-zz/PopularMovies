@@ -8,11 +8,12 @@ public class SingleMovie {
     String title; // title
     String poster; //poster_path
     String synopsis; //overview
-    String rating; //vote_average
+    double rating; //vote_average
     String date; //release_date
     String id_m;
+    double popular;
 
-    public SingleMovie(String t, String p, String s, String r, String d, String id_movie){
+    public SingleMovie(String t, String p, String s, double r, String d, String id_movie,double pop){
         this.title = t;
 
         this.poster = p;
@@ -24,6 +25,8 @@ public class SingleMovie {
         this.date = d ;
 
         this.id_m = id_movie;
+
+        this.popular = pop;
 
         //this.trailerUrl = trailer;
 

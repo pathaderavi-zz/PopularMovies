@@ -28,6 +28,7 @@ public class MovieContract {
         public static final String COLUMN_OVERVIEW = "OVERVIEW";
         public static final String COLUMN_VOTE = "VOTE";
         public static final String COLUMN_RELEASE_DATE = "RELEASE_DATE";
+        public static final String COLUMN_POPULARITY = "POPULARITY";
 
 
     }

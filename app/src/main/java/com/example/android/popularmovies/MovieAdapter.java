@@ -49,35 +49,35 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
         ImageView id = (ImageView) convertView.findViewById(R.id.image_poster);
 
         Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
-               null,
-               null,
-               null,
-               null,
-               null);
+                null,
+                null,
+                null,
+                null,
+                null);
         String filename;
-        if(m1!=null && m1.moveToPosition(position) && !checkConnection()) {
+        if (m1 != null && m1.moveToPosition(position) && !checkConnection()) {
 
             String id_cursor = m1.getString(m1.getColumnIndex("ID"));
             filename = m1.getString(m1.getColumnIndex("ID"));
             imageFile = new File("/data/data/com.example.android.popularmovies/app_PopMov/" + filename + ".jpg");
-            Log.d(String.valueOf(imageFile.exists())," File Status "+m1.getString(m1.getColumnIndex("NAME")));
-            Log.d(imageFile.toString()," Image name");
+            Log.d(String.valueOf(imageFile.exists()), " File Status " + m1.getString(m1.getColumnIndex("NAME")));
+            Log.d(imageFile.toString(), " Image name");
             Picasso.with(getContext()).load(imageFile).into(id);
             //Log.d(m1.getString(m1.getColumnIndex("ID")), "Check Cursor ID through Movie Adapter ");
         }
 
-        if(checkConnection())
-        {
+        if (checkConnection()) {
             Picasso.with(getContext()).load(m.id).into(id);
         }
 
-       //
+        //
         m1.close();
         //name.setText(m.movieName);
 
 
         return convertView;
     }
+
     public boolean checkConnection() {
 
         ConnectivityManager cm =

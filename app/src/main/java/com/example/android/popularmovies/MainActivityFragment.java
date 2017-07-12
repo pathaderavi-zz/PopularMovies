@@ -1,7 +1,6 @@
 package com.example.android.popularmovies;
 
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -43,12 +42,11 @@ import static com.example.android.popularmovies.R.string.sortby;
  * Use the {@link MainActivityFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainActivityFragment extends Fragment  {
+public class MainActivityFragment extends Fragment {
 
     private MovieAdapter mAdapter;
     private GridView gView;
     private ImageView imgView;
-
 
 
     Activity test;
@@ -100,6 +98,7 @@ public class MainActivityFragment extends Fragment  {
 
 
     }
+
     View rootView;
     public String location = "";
 
@@ -107,7 +106,7 @@ public class MainActivityFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.fragment_main_activity,container,false);
+        rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
         gView = (GridView) rootView.findViewById(R.id.fragment_movie);
         //imgView = (ImageView) rootView.findViewById(R.id.image_poster);
 
@@ -120,7 +119,7 @@ public class MainActivityFragment extends Fragment  {
 
     //MovieDetailActivity mm = new MovieDetailActivity();
 
-    public class FetchMovies extends AsyncTask<String, Void, List<Movie>>{
+    public class FetchMovies extends AsyncTask<String, Void, List<Movie>> {
 
 
         @Override
@@ -130,31 +129,31 @@ public class MainActivityFragment extends Fragment  {
             String q = params[0];
             boolean isCon = checkConnection();
 
-            try{    if(isCon){
-                    newList = QueryUtils.fetchMovies(q);}
-                else{
+            try {
+                if (isCon) {
+                    newList = QueryUtils.fetchMovies(q);
+                } else {
 
 //                MovieDetailActivity mm = new MovieDetailActivity();
 //                Log.d(String.valueOf(mm.checkConnection()),"COn Stat");
-                Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null);
+                    Cursor m1 = getContext().getContentResolver().query(MovieContract.MovieEntry.FINAL_URI.buildUpon().build(),
+                            null,
+                            null,
+                            null,
+                            null,
+                            null);
 
-                while(m1.moveToNext()){
-                    String id_c = m1.getString(m1.getColumnIndex("ID"));
-                    String name_c = m1.getString(m1.getColumnIndex("NAME"));
-                    Log.d(id_c,name_c+" Here Log");
-                 newList.add(new Movie(id_c,id_c,id_c));
-                }
+                    while (m1.moveToNext()) {
+                        String id_c = m1.getString(m1.getColumnIndex("ID"));
+                        String name_c = m1.getString(m1.getColumnIndex("NAME"));
+                        Log.d(id_c, name_c + " Here Log");
+                        newList.add(new Movie(id_c, id_c, id_c));
+                    }
                 }
 //
 
 //                if(mm.checkConnection()){
 //                    Log.d(String.valueOf(newListCursor.size()),"Check Cursor");
-
 
 
 //                }
@@ -163,22 +162,25 @@ public class MainActivityFragment extends Fragment  {
 //                    return newListCursor;
 //                }
 
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            catch(Exception e){e.printStackTrace();}
             return newList;
         }
+
         Toast toast = null;
+
         @Override
         protected void onPostExecute(final List<Movie> movies) {
             super.onPostExecute(movies);
 
-            if(movies!=null){
+            if (movies != null) {
                 //movies = new ArrayList<Movie>();
                 mAdapter = new MovieAdapter(getContext(), movies);
 
                 gView.setAdapter(mAdapter);
 
-                gView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                gView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -192,11 +194,10 @@ public class MainActivityFragment extends Fragment  {
 //
 //                        toast.show();
 
-                        Intent detail = new Intent(getContext(),MovieDetailActivity.class);
+                        Intent detail = new Intent(getContext(), MovieDetailActivity.class);
                         detail.setType("text/plain");
-                        detail.putExtra(Intent.EXTRA_TEXT,m.uniqueID);
+                        detail.putExtra(Intent.EXTRA_TEXT, m.uniqueID);
                         startActivity(detail);
-
 
 
                     }
@@ -205,15 +206,16 @@ public class MainActivityFragment extends Fragment  {
             }
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItem = item.getItemId();
 
-        if(menuItem == R.id.action_sort){
+        if (menuItem == R.id.action_sort) {
             sortby = "top_rated";
             new FetchMovies().execute(sortby);
         }
-        if(menuItem == R.id.action_sort_pop){
+        if (menuItem == R.id.action_sort_pop) {
             sortby = "popular";
             new FetchMovies().execute(sortby);
 
@@ -226,9 +228,10 @@ public class MainActivityFragment extends Fragment  {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.sort,menu);
+        inflater.inflate(R.menu.sort, menu);
 
     }
+
     public boolean checkConnection() {
 
         ConnectivityManager cm =

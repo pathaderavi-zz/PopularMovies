@@ -29,16 +29,15 @@ public class MovieContentProvider extends ContentProvider {
     private static final UriMatcher sUrimatcher = buildUriMatcher();
 
 
-
-
-    public static UriMatcher buildUriMatcher(){
+    public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-        uriMatcher.addURI(MovieContract.AUTHORITY,MovieContract.PATH_MOVIES,MOVIES);
-        uriMatcher.addURI(MovieContract.AUTHORITY,MovieContract.PATH_MOVIES+"/#",MOVIES_ID);
+        uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES, MOVIES);
+        uriMatcher.addURI(MovieContract.AUTHORITY, MovieContract.PATH_MOVIES + "/#", MOVIES_ID);
 
         return uriMatcher;
     }
+
     private MovieDBHelper movieDBHelper;
 
     @Override
@@ -62,20 +61,19 @@ public class MovieContentProvider extends ContentProvider {
 //        Log.d(uri.toString(),selection);
 
 
-
         Cursor retCusor;
 
-        switch(match){
-            case MOVIES_ID:{
+        switch (match) {
+            case MOVIES_ID: {
                 selectionArgs = new String[]{"ID=?"};
                 retCusor = db.query(MovieContract.MovieEntry.TABLE_NAME,
                         null,
                         "ID=?",
-                        new String[] {selection},
+                        new String[]{selection},
                         null,
                         null,
                         null);
-                Log.d(String.valueOf(retCusor.getCount()),"Here");
+                Log.d(String.valueOf(retCusor.getCount()), "Here");
                 break;
             }
             //TODO
@@ -90,8 +88,8 @@ public class MovieContentProvider extends ContentProvider {
                 break;
             }
 
-                default:
-                    throw new UnsupportedOperationException("Unable to find "+uri);
+            default:
+                throw new UnsupportedOperationException("Unable to find " + uri);
         }
 
         return retCusor;
@@ -109,34 +107,32 @@ public class MovieContentProvider extends ContentProvider {
 
 
         int matchUri = sUrimatcher.match(uri);
-        Log.d("URI",uri.toString());
+        Log.d("URI", uri.toString());
 
-        final SQLiteDatabase db  = movieDBHelper.getWritableDatabase();
-
+        final SQLiteDatabase db = movieDBHelper.getWritableDatabase();
 
 
         Uri returnUri = null;
 
-        switch (matchUri){
+        switch (matchUri) {
             case MOVIES:
                 long id;
                 try {
-                     id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
-                }
-                catch(Exception e){
+                    id = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, values);
+                } catch (Exception e) {
                     throw new android.database.SQLException("Failed to insert");
                 }
-                if(id>0){
-                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.FINAL_URI,id);
-                    Log.d("Hee",returnUri.toString());
+                if (id > 0) {
+                    returnUri = ContentUris.withAppendedId(MovieContract.MovieEntry.FINAL_URI, id);
+                    Log.d("Hee", returnUri.toString());
                 }
                 break;
             case MOVIES_ID:
 
-                default:
-                    throw new UnsupportedOperationException("Unknown uri: " + uri);
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(returnUri,null);
+        getContext().getContentResolver().notifyChange(returnUri, null);
         return returnUri;
     }
 
@@ -148,19 +144,19 @@ public class MovieContentProvider extends ContentProvider {
 
         int movieDeleted;
 
-        switch (match){
+        switch (match) {
             case MOVIES_ID:
                 String id = uri.getPathSegments().get(1);
-                Log.d("path segment",id);
+                Log.d("path segment", id);
 
-                movieDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME,"ID=?", new String[] {id});
+                movieDeleted = db.delete(MovieContract.MovieEntry.TABLE_NAME, "ID=?", new String[]{id});
                 break;
             default:
-                throw new UnsupportedOperationException("Unsupported Uri "+uri);
+                throw new UnsupportedOperationException("Unsupported Uri " + uri);
 
         }
-        if(movieDeleted!=0){
-            getContext().getContentResolver().notifyChange(uri,null);
+        if (movieDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
             Log.d("Movie Deleted ", String.valueOf(movieDeleted));
         }
         return movieDeleted;
