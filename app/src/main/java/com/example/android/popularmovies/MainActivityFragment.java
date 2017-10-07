@@ -9,8 +9,12 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -36,6 +40,7 @@ import java.util.List;
 import static android.R.attr.id;
 import static android.R.attr.menuCategory;
 import static android.R.attr.name;
+import static android.R.attr.offset;
 import static android.widget.Toast.makeText;
 import static com.example.android.popularmovies.R.string.sortby;
 
@@ -285,5 +290,24 @@ public class MainActivityFragment extends Fragment {
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         return isConnected;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        int index = gView.getFirstVisiblePosition();
+        outState.putInt("index_value",index);
+
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        int index_here = savedInstanceState.getInt("index_value");
+        Log.d("Index Log Here",String.valueOf(offset));
+        gView.setSelection(index_here);
+
+
     }
 }
