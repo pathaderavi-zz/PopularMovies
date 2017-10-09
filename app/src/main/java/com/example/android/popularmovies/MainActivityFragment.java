@@ -78,6 +78,7 @@ public class MainActivityFragment extends Fragment {
     String sortby;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor editor;
+    boolean movieClicked = false;
     public MainActivityFragment() {
         // Required empty public constructor
     }
@@ -217,7 +218,7 @@ public class MainActivityFragment extends Fragment {
                 int test = sharedPreferences.getInt("index_value",0);
                 boolean setAdaptertoPosition = sharedPreferences.getBoolean("checkConAfter",false) && sharedPreferences.getBoolean("checkConBefore",false);
 
-                Log.d("Check to see Position ", String.valueOf(setAdaptertoPosition));
+                Log.d("Check to see Position ", String.valueOf(test));
 
                 if((test>0 && setAdaptertoPosition) || showFav){
                     gView.setSelection(test);
@@ -235,8 +236,9 @@ public class MainActivityFragment extends Fragment {
 //                        toast = Toast.makeText(getContext(),m.movieName,Toast.LENGTH_SHORT);
 //
 //                        toast.show();
+                        movieClicked = true;
                         int index = gView.getFirstVisiblePosition();
-
+                        Log.d("Check On Click",String.valueOf(position));
                         editor.putInt("index_value",position);
                        // Log.d("Editor "+String.valueOf(position),String.valueOf(sharedPreferences.getInt("index_value",0)));
                         editor.putBoolean("checkConBefore",checkConnection());
@@ -317,10 +319,14 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        if(!movieClicked){
+        Log.d("Check onSavedInstance","Done");
         int index = gView.getFirstVisiblePosition();
         outState.putInt("index_value",index);
         editor.putInt("index_value",index);
         editor.apply();
+
+        }
 
     }
 
@@ -335,7 +341,7 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        Log.d("SharedPref Boolean",String.valueOf(sharedPreferences.getBoolean("showFav",true)));
+        Log.d("Check onActivity","Done");
 
 
         if(savedInstanceState!=null) {
@@ -344,7 +350,9 @@ public class MainActivityFragment extends Fragment {
             //new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
             gView.setSelection(index_here);
         }
-
+        if(movieClicked){
+            movieClicked = false;
+        }
 
     }
 }
