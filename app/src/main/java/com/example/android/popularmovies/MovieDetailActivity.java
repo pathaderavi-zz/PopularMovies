@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -98,7 +100,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     boolean deleteStatus = false;
     TextView trailersHeading;
     TextView reviewHeading;
-
+    SharedPreferences.Editor editor;
+    SharedPreferences sharedPreferences;
 
 
     public MovieDetailActivity() {
@@ -116,7 +119,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         context = getApplicationContext();
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
         // button = (Button) findViewById(R.id.testButton);
         image = (ImageView) findViewById(R.id.image_movie);
         mRecycler = (RecyclerView) findViewById(R.id.trailerList);
@@ -460,6 +464,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (fileDelete.exists() && deleteStatus == true) {
             fileDelete.delete();
         }
+
+        editor.putBoolean("checkConAfter",checkConnection());
+        editor.apply();
+        Log.d("Back Pressed",String.valueOf(sharedPreferences.getBoolean("checkConAfter",false)));
         mCursor.close();
 
     }
@@ -473,6 +481,11 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
             mCursor.close();
         }
+
+        editor.putBoolean("checkConAfter",checkConnection());
+        editor.apply();
+
+        Log.d("Up Pressed",String.valueOf(sharedPreferences.getBoolean("checkConAfter",false)));
         return super.onOptionsItemSelected(item);
     }
 

@@ -15,6 +15,7 @@ import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.StringDef;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -56,9 +57,11 @@ public class MainActivityFragment extends Fragment {
     private GridView gView;
     private ImageView imgView;
     String sby;
-    boolean showFav = false;
+    boolean showFav;
     Activity test;
     private ProgressBar spinnerLoading;
+
+  //  Bundle bundle_uni;
     //Cursor mFavourites;
 //    String title = "Popular Movies ";
 //    String action1 = "All";
@@ -101,7 +104,7 @@ public class MainActivityFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
+       // bundle_uni = new Bundle();
 
        // ((MainActivityFragment) getActivity()).getActionBar().setTitle(action1+action2);
 
@@ -113,7 +116,7 @@ public class MainActivityFragment extends Fragment {
                     editor.putString("sort_by_i",sortby);
         }
         editor.putString("sort_by_c","POPULARITY DESC");
-        editor.putBoolean("showFav",false);
+        //editor.putBoolean("showFav",false);
         editor.apply();
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -145,12 +148,14 @@ public class MainActivityFragment extends Fragment {
 
 
 
-    public class FetchMovies extends AsyncTask<String, Void, List<Movie>> {
+        public class FetchMovies extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
         protected void onPreExecute() {
 
             super.onPreExecute();
+
+            Log.d("Check Incoming",String.valueOf(sharedPreferences.getBoolean("checkConAfter",false)));
             //spinnerLoading.setVisibility(View.VISIBLE);
         }
 
@@ -168,7 +173,7 @@ public class MainActivityFragment extends Fragment {
                 showFav=true;
             }
             try {
-                if (isCon && !showFav) {
+                if (isCon && !sharedPreferences.getBoolean("showFav",true)) {
                     newList = QueryUtils.fetchMovies(q);
                 } else {
                     //Log.d(" Else "," Loop ");
@@ -209,6 +214,14 @@ public class MainActivityFragment extends Fragment {
 
                 gView.setAdapter(mAdapter);
 
+                int test = sharedPreferences.getInt("index_value",0);
+                boolean setAdaptertoPosition = sharedPreferences.getBoolean("checkConAfter",false) && sharedPreferences.getBoolean("checkConBefore",false);
+
+                Log.d("Check to see Position ", String.valueOf(setAdaptertoPosition));
+
+                if((test>0 && setAdaptertoPosition) || showFav){
+                    gView.setSelection(test);
+                }
                 gView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -222,7 +235,15 @@ public class MainActivityFragment extends Fragment {
 //                        toast = Toast.makeText(getContext(),m.movieName,Toast.LENGTH_SHORT);
 //
 //                        toast.show();
+                        int index = gView.getFirstVisiblePosition();
 
+                        editor.putInt("index_value",position);
+                       // Log.d("Editor "+String.valueOf(position),String.valueOf(sharedPreferences.getInt("index_value",0)));
+                        editor.putBoolean("checkConBefore",checkConnection());
+                        editor.apply();
+                       // Log.d("Editor "+String.valueOf(position),String.valueOf(sharedPreferences.getInt("index_value",0)));
+                        //                        bundle_uni.putInt("index_value",index);
+//                        Log.d("Click Listener",String.valueOf(bundle_uni));
                         Intent detail = new Intent(getContext(), MovieDetailActivity.class);
                         detail.setType("text/plain");
                         detail.putExtra(Intent.EXTRA_TEXT, m.uniqueID);
@@ -239,8 +260,8 @@ public class MainActivityFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int menuItem = item.getItemId();
-
-        if (menuItem == R.id.action_sort) {
+        editor.putInt("index_value",0);
+          if (menuItem == R.id.action_sort) {
             sortby = "top_rated";
             editor.putString("sort_by_c","VOTE DESC");
             editor.putString("sort_by_i",sortby);
@@ -282,7 +303,7 @@ public class MainActivityFragment extends Fragment {
     }
 
     public boolean checkConnection() {
-
+        //editor.putInt("index_value",0);
         ConnectivityManager cm =
                 (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -298,15 +319,31 @@ public class MainActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
         int index = gView.getFirstVisiblePosition();
         outState.putInt("index_value",index);
+        editor.putInt("index_value",index);
+        editor.apply();
 
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onDestroy() {
+        super.onDestroy();
+        //TODO Destroy SharedPreferences
+    }
+
+    //
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        int index_here = savedInstanceState.getInt("index_value");
-        Log.d("Index Log Here",String.valueOf(offset));
-        gView.setSelection(index_here);
+
+        Log.d("SharedPref Boolean",String.valueOf(sharedPreferences.getBoolean("showFav",true)));
+
+
+        if(savedInstanceState!=null) {
+            int index_here = sharedPreferences.getInt("index_value",0);
+            Log.d("Index Log Here",String.valueOf(savedInstanceState.containsKey("index_value")));
+            //new FetchMovies().execute(sharedPreferences.getString("sort_by_i",""));
+            gView.setSelection(index_here);
+        }
 
 
     }
