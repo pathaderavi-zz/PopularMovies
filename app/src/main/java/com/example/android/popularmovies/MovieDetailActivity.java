@@ -9,31 +9,23 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.icu.text.SimpleDateFormat;
-import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.text.Layout;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,19 +37,7 @@ import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-
-import static android.R.attr.id;
-import static android.R.attr.title;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
-import static android.os.Build.VERSION_CODES.M;
-import static com.example.android.popularmovies.R.id.empty_view;
-import static com.example.android.popularmovies.R.id.reviewHeading;
-import static com.example.android.popularmovies.R.id.trailersHeading;
-import static com.example.android.popularmovies.R.id.viewGroup;
-import static java.lang.System.load;
 
 public class MovieDetailActivity extends AppCompatActivity {
     File f1;
@@ -102,21 +82,28 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView reviewHeading;
     SharedPreferences.Editor editor;
     SharedPreferences sharedPreferences;
-
+    ScrollView scrollView;
+    RelativeLayout relativeLayout;
 
     public MovieDetailActivity() {
 
+        //scrollView =(ScrollView) findViewById(R.id.viewGroup);
     }
 
 
     public MovieDetailActivity(Context cont) {
         context = cont;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
+
+        scrollView =(ScrollView) findViewById(R.id.viewGroup);
+        relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
+
 
         context = getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -194,6 +181,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         //}
 
     }
+
 
 
     public class FetchSingleMovie extends AsyncTask<String, Void, SingleMovie> {
@@ -533,6 +521,22 @@ public class MovieDetailActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    int x;
+    int y;
+    View z;
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
     }
 
 

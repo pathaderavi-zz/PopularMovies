@@ -322,6 +322,7 @@ public class MainActivityFragment extends Fragment {
         if(!movieClicked){
         Log.d("Check onSavedInstance","Done");
         int index = gView.getFirstVisiblePosition();
+
         outState.putInt("index_value",index);
         editor.putInt("index_value",index);
         editor.apply();
