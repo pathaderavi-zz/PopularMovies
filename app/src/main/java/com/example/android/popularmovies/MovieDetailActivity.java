@@ -84,7 +84,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     ScrollView scrollView;
     RelativeLayout relativeLayout;
-
+    int scrollx;
+    int scrolly;
     public MovieDetailActivity() {
 
         //scrollView =(ScrollView) findViewById(R.id.viewGroup);
@@ -104,7 +105,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         scrollView =(ScrollView) findViewById(R.id.viewGroup);
         relativeLayout = (RelativeLayout) findViewById(R.id.relative_layout);
 
+        //Log.d("Scrollx "+String.valueOf(scrollx),"Scrolly "+String.valueOf(scrollly));
 
+        scrollView.smoothScrollTo(0,400);
         context = getApplicationContext();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
@@ -443,6 +446,21 @@ public class MovieDetailActivity extends AppCompatActivity {
             if (mReviews.isEmpty()) {
                 reviewHeading.setVisibility(View.GONE);
             }
+            //Log.d("Scrollview length",String.valueOf(scrollView.getBottom()));
+
+            final int checkX = sharedPreferences.getInt("scrollx",0);
+            final int checkY = sharedPreferences.getInt("scrolly",0);
+
+            if(checkY>0){
+            scrollView.post(new Runnable() {
+                @Override
+                public void run() {
+                    scrollView.smoothScrollTo(checkX,checkY);
+                }
+            });
+                editor.putInt("scrolly",0);
+                editor.apply();
+            }
         }
     }
 
@@ -523,13 +541,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
     }
 
-    int x;
-    int y;
-    View z;
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
+
+        scrollx = scrollView.getScrollX();
+        scrolly = scrollView.getScrollY();
+
+        editor.putInt("scrollx",scrollx);
+        editor.putInt("scrolly",scrolly);
+        editor.apply();
+
+        //Log.d(String.valueOf(scrollx),String.valueOf(scrolly));
 
     }
 
