@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MovieDetailActivity extends AppCompatActivity {
     File f1;
@@ -452,12 +453,25 @@ public class MovieDetailActivity extends AppCompatActivity {
             final int checkY = sharedPreferences.getInt("scrolly",0);
 
             if(checkY>0){
-            scrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.smoothScrollTo(checkX,checkY);
-                }
-            });
+//            scrollView.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    scrollView.smoothScrollTo(checkX,checkY);
+//                }
+//            });
+
+                /*Sample thread for scrollTo check*/
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            TimeUnit.MICROSECONDS.sleep(mReviewView.getDrawingTime());
+                            scrollView.scrollTo(checkX,checkY);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
                 editor.putInt("scrolly",0);
                 editor.apply();
             }
