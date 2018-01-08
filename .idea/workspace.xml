@@ -10,9 +10,7 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e0b6bd6a-9f8c-4c03-9060-420303a6ad1f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/android/popularmovies/MovieDetailActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/android/popularmovies/MovieDetailActivity.java" />
-    </list>
+    <list default="true" id="e0b6bd6a-9f8c-4c03-9060-420303a6ad1f" name="Default" comment="" />
     <ignored path="PopularMovies.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
